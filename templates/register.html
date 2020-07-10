@@ -24,54 +24,74 @@
                     {% if error != ' ' %}
                         <h5 class="mb-4">{{error}}</h5>
                     {% endif %}
-    				<form action="{{url_for('registration')}}" class="appointment">
+    				<form action="{{url_for('registration')}}" class="appointment" method="post">
     					<div class="row">
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="text" class="form-control" placeholder="Name">
+                                  <input type="text" class="form-control" placeholder="Name" name="user_name" value="{{userData['user_name']}}" required>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <textarea name="" id="" cols="10" rows="4" class="form-control" placeholder="Address"></textarea>
+                                    <textarea name="user_address" cols="10" rows="4" class="form-control" placeholder="Address" value="{{userData['user_address']}}" required></textarea>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="text" class="form-control" placeholder="Birth Certificate / NID Number">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="birthday"  class="form-control">Date of Birth :</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="date" class="form-control" id="birthday" name="user_dob" required>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="email" class="form-control" placeholder="Email address">
+                                  <input type="text" class="form-control" placeholder="Birth Certificate / NID Number" name="user_nid" value="{{userData['user_nid']}}" required>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="text" class="form-control" placeholder="Phone number">
+                                  <input type="email" class="form-control" placeholder="Email address" name="user_email" value="{{userData['user_email']}}">
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="password" class="form-control" placeholder="Password">
+                                  <input type="tel" minlength="11" class="form-control" placeholder="Phone number" name="user_phone"  value="{{userData['user_phone']}}" required>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="password" class="form-control" placeholder="Re-enter Password">
+                                  <input type="password" class="form-control" placeholder="Password" name="user_pass1" required>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input type="submit" value="Register" class="btn btn-primary py-3 px-4">
+                                  <input type="password" class="form-control" placeholder="Re-enter Password" name="user_pass2" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="submit" value="Register" class="btn btn-success py-3 px-4">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <a href="{{url_for('login')}}" class="btn btn-danger py-3 px-4">Login</a>
                                 </div>
                             </div>
     					</div>
