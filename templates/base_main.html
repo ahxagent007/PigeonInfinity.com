@@ -31,7 +31,7 @@
 					<div class="col-md-6 d-flex align-items-center">
 						<p class="mb-0 phone pl-md-2">
 							<a href="#" class="mr-2"><span class="fa fa-phone mr-1"></span> +00 1234 567</a>
-							<a href="#"><span class="fa fa-paper-plane mr-1"></span> youremail@email.com</a>
+							<a href="{{url_for('login')}}"><span class="fa fa-paper-plane mr-1"></span> Login</a>
 						</p>
 					</div>
 					<div class="col-md-6 d-flex justify-content-md-end">
@@ -73,7 +73,7 @@
 				<div class="row">
 					<div class="col-md-6 col-lg-3 mb-4 mb-md-0">
 						<h2 class="footer-heading">Pigeon Infinity</h2>
-						<p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+						<p>Website Heading</p>
 						<ul class="ftco-footer-social p-0">
               <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><span class="fa fa-twitter"></span></a></li>
               <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><span class="fa fa-facebook"></span></a></li>
@@ -107,8 +107,14 @@
 					</div>
 					<div class="col-md-6 col-lg-3 pl-lg-5 mb-4 mb-md-0">
 						<h2 class="footer-heading">Quick Links</h2>
-						{% block footer_menu %}
-						{% endblock %}
+                        <ul class="list-unstyled">
+                          <li><a href="#" class="py-2 d-block">Home</a></li>
+                          <li><a href="#" class="py-2 d-block">Auction</a></li>
+                          <li><a href="#" class="py-2 d-block">Article</a></li>
+                          <li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
+                          <li><a href="#" class="py-2 d-block">Rules and Regulations</a></li>
+                          <li><a href="#" class="py-2 d-block">Contact</a></li>
+                        </ul>
 					</div>
 					<div class="col-md-6 col-lg-3 mb-4 mb-md-0">
 						<h2 class="footer-heading">Have a Questions?</h2>
@@ -125,8 +131,8 @@
           <div class="col-md-12 text-center">
 
             <p class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib.com</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Developed by <a href="https://secretdevbd.com" target="_blank">Secret Developers</a> Design by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+ </p>
           </div>
         </div>
 			</div>

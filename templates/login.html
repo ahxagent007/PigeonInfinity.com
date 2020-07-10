@@ -1,0 +1,60 @@
+{% extends 'base_main.html' %}
+{% block title %}
+    <title>Login</title>
+{% endblock %}
+{% block menu %}
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="about.html" class="nav-link">Auction</a></li>
+        <li class="nav-item"><a href="vet.html" class="nav-link">Articles</a></li>
+        <li class="nav-item"><a href="services.html" class="nav-link">Clubs</a></li>
+      <li class="nav-item"><a href="gallery.html" class="nav-link">Buy Now</a></li>
+      <li class="nav-item"><a href="pricing.html" class="nav-link">Contact</a></li>
+      <li class="nav-item"><a href="blog.html" class="nav-link">About</a></li>
+    </ul>
+{% endblock %}
+{% block body %}
+
+    <section class="ftco-appointment ftco-section ftco-no-pt ftco-no-pb img" style="background-image: url(images/bg_3.jpg);">
+			<div class="overlay"></div>
+    	<div class="container">
+    		<div class="row d-md-flex justify-content-end">
+    			<div class="col-md-12 col-lg-6 half p-3 py-5 pl-lg-5 ftco-animate">
+    				<h2 class="mb-4">Login</h2>
+                    {% if error != ' ' %}
+                        <h5 class="mb-4">{{error}}</h5>
+                    {% endif %}
+    				<form action="{{url_for('login')}}" class="appointment">
+    					<div class="row">
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                  <input type="text" class="form-control" placeholder="Email or Phone">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                  <input type="password" class="form-control" placeholder="Password">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="submit" value="Login" class="btn btn-success py-3 px-4">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <a href="{{url_for('registration')}}" class="btn btn-danger py-3 px-4">Register</a>
+                                </div>
+                            </div>
+
+    					</div>
+	                </form>
+    			</div>
+    		</div>
+    	</div>
+    </section>
+{% endblock %}

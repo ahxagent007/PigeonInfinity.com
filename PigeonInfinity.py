@@ -9,6 +9,14 @@ app.secret_key = 'SECRETKEYXIAN'
 def home():
     return render_template('index.html')
 
+@app.route('/Login')
+def login():
+    return render_template('login.html')
+
+@app.route('/Registration')
+def registration():
+    return render_template('register.html')
+
 
 if __name__ == '__main__':
     app.debug = True
