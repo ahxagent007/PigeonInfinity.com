@@ -259,6 +259,14 @@ def article():
 def auction():
     return render_template('auction.html', userData={})
 
+@app.route('/Auction/<auction_no>')
+def single_auction(auction_no):
+    return render_template('single_auction.html', userData={})
+
+@app.route('/Pigeon/<pigeon>')
+def pigeon(pigeon):
+    return render_template('pigeon.html', userData={})
+
 @app.route('/Privacy')
 def privacy():
     return render_template('profile.html', userData={})
