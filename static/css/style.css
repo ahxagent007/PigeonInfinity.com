@@ -8937,7 +8937,7 @@ textarea.form-control {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#207dff', endColorstr='#00bd55', GradientType=1 ); }
     @media (min-width: 992px) {
       .ftco-appointment .overlay {
-        width: 50%; } }
+        width: 100%; } }
     @media (max-width: 991.98px) {
       .ftco-appointment .overlay {
         opacity: .8; } }

@@ -118,7 +118,7 @@ class DatabaseByPyMySQL:
 
     def getUserByEmail(self, email):
 
-        sql_all = 'SELECT * FROM user WHERE UserEmail = "{0}"'.format(email)
+        sql_all = 'SELECT * FROM user WHERE email = "{0}" OR phone = "{0}";'.format(email)
         self.cursor.execute(sql_all)
         data = self.cursor.fetchall()
 
@@ -164,42 +164,44 @@ class DatabaseByPyMySQL:
 def home():
     return render_template('index.html')
 
-@app.route('/Login')
+@app.route('/Login', methods=['POST', 'GET'])
 def login():
-    '''if session.get('UserID') is not None:
-        return redirect(url_for('home'))'''
 
-    '''session['UserID'] = user_id
-    session['UserName'] = details['name']
-    session['idToken'] = idToken
-    session['UserEmail'] = details['email']
-    session['UserPhone'] = details['phone']
-    session['UserAddress'] = details['address']
-    
-    return redirect(url_for('home'))
-    '''
-    '''
-    try:
-    # Log the user in
-    
-    except HTTPError:
-    print('Exception : '+str(HTTPException), flush=True)
-    return render_template('login.html', error='TRUE')
-    '''
+    if session.get('user_id') is not None:
+        return redirect(url_for('home'))
+
     if request.method == 'POST':
-        email = request.form['Email']
-        pw = request.form['Pass']
+        email = request.form['user_email']
+        pw = request.form['user_pass']
 
-    return render_template('login.html', methods=['POST', 'GET'])
+        DB = DatabaseByPyMySQL()
+        user, sts = DB.getUserByEmail(email)
+
+        if sts:
+            pwd = computeMD5hash(pw)
+            if pwd == user['password']:
+
+                session['user_id'] = user['user_id']
+                session['name'] = user['name']
+                session['phone'] = user['phone']
+                session['email'] = user['email']
+                session['address'] = user['address']
+
+                return redirect(url_for('home'))
+            else:
+                return render_template('login.html', error='Wrong password')
+        else:
+            return render_template('login.html', error='Not registered')
+
+    return render_template('login.html')
 
 @app.route('/Logout')
 def logout():
-    session.pop('UserID', None)
-    session.pop('UserName', None)
-    session.pop('idToken', None)
-    session.pop('UserEmail', None)
-    session.pop('UserPhone', None)
-    session.pop('UserAddress', None)
+    session.pop('user_id', None)
+    session.pop('name', None)
+    session.pop('phone', None)
+    session.pop('email', None)
+    session.pop('address', None)
 
     return redirect(url_for('home'))
 
@@ -244,6 +246,10 @@ def registration():
 
 
     return render_template('register.html', userData={})
+
+@app.route('/Profile')
+def profile():
+    return render_template('profile.html', userData={})
 
 def computeMD5hash(my_string):
     m = hashlib.md5()
