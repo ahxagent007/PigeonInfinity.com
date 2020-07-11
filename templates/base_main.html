@@ -56,7 +56,7 @@
 		</div>
 		<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
-	    	<a class="navbar-brand" href="index.html"><span class="flaticon-pawprint-1 mr-2"></span>Pigeon Infinity</a>
+	    	<a class="navbar-brand" href="{{url_for('home')}}"><span class="flaticon-pawprint-1 mr-2"></span>Pigeon Infinity</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="fa fa-bars"></span> Menu
 	      </button>
@@ -92,7 +92,7 @@
 						<div class="block-21 mb-4 d-flex">
               <a class="img mr-4 rounded" style="background-image: url(images/image_1.jpg);"></a>
               <div class="text">
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
+                <h3 class="heading"><a href="{{url_for('login')}}">Even the all-powerful Pointing has no control about</a></h3>
                 <div class="meta">
                   <div><a href="#"><span class="icon-calendar"></span> April 7, 2020</a></div>
                   <div><a href="#"><span class="icon-person"></span> Admin</a></div>
@@ -103,7 +103,7 @@
             <div class="block-21 mb-4 d-flex">
               <a class="img mr-4 rounded" style="background-image: url(images/image_2.jpg);"></a>
               <div class="text">
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
+                <h3 class="heading"><a href="{{url_for('login')}}">Even the all-powerful Pointing has no control about</a></h3>
                 <div class="meta">
                   <div><a href="#"><span class="icon-calendar"></span> April 7, 2020</a></div>
                   <div><a href="#"><span class="icon-person"></span> Admin</a></div>
@@ -115,12 +115,12 @@
 					<div class="col-md-6 col-lg-3 pl-lg-5 mb-4 mb-md-0">
 						<h2 class="footer-heading">Quick Links</h2>
                         <ul class="list-unstyled">
-                          <li><a href="#" class="py-2 d-block">Home</a></li>
-                          <li><a href="#" class="py-2 d-block">Auction</a></li>
-                          <li><a href="#" class="py-2 d-block">Article</a></li>
-                          <li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
-                          <li><a href="#" class="py-2 d-block">Rules and Regulations</a></li>
-                          <li><a href="#" class="py-2 d-block">Contact</a></li>
+                          <li><a href="{{url_for('home')}}" class="py-2 d-block">Home</a></li>
+                          <li><a href="{{url_for('auction')}}" class="py-2 d-block">Auction</a></li>
+                          <li><a href="{{url_for('article')}}" class="py-2 d-block">Article</a></li>
+                          <li><a href="{{url_for('privacy')}}" class="py-2 d-block">Privacy Policy</a></li>
+                          <li><a href="{{url_for('rules')}}" class="py-2 d-block">Rules and Regulations</a></li>
+                          <li><a href="{{url_for('contact')}}" class="py-2 d-block">Contact</a></li>
                         </ul>
 					</div>
 					<div class="col-md-6 col-lg-3 mb-4 mb-md-0">

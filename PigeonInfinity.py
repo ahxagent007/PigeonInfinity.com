@@ -251,6 +251,38 @@ def registration():
 def profile():
     return render_template('profile.html', userData={})
 
+@app.route('/Articles')
+def article():
+    return render_template('article.html', userData={})
+
+@app.route('/Auction')
+def auction():
+    return render_template('auction.html', userData={})
+
+@app.route('/Privacy')
+def privacy():
+    return render_template('profile.html', userData={})
+
+@app.route('/Rules')
+def rules():
+    return render_template('rules.html', userData={})
+
+@app.route('/Contact')
+def contact():
+    return render_template('contact.html', userData={})
+
+@app.route('/Clubs')
+def club():
+    return render_template('contact.html', userData={})
+
+@app.route('/Buy')
+def buy():
+    return render_template('contact.html', userData={})
+
+@app.route('/About')
+def about():
+    return render_template('contact.html', userData={})
+
 def computeMD5hash(my_string):
     m = hashlib.md5()
     m.update(my_string.encode('utf-8'))
