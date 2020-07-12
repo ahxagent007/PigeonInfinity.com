@@ -291,6 +291,24 @@ def buy():
 def about():
     return render_template('contact.html', userData={})
 
+
+@app.route('/Admin/Auction')
+def admin_auction():
+    return render_template('admin_auction.html', userData={})
+
+@app.route('/Admin/Member')
+def admin_member():
+    return render_template('admin_member.html', userData={})
+
+@app.route('/Admin/Article')
+def admin_article():
+    return render_template('admin_article.html', userData={})
+
+@app.route('/Admin/Club')
+def admin_club():
+    return render_template('admin_club.html', userData={})
+
+
 def computeMD5hash(my_string):
     m = hashlib.md5()
     m.update(my_string.encode('utf-8'))

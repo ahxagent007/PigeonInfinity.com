@@ -1,0 +1,17 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block menu %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item"><a href="{{url_for('admin_auction')}}" class="nav-link">Auction</a></li>
+    <li class="nav-item "><a href="{{url_for('admin_member')}}" class="nav-link">Member</a></li>
+    <li class="nav-item active"><a href="{{url_for('admin_article')}}" class="nav-link">Articles</a></li>
+    <li class="nav-item"><a href="{{url_for('admin_club')}}" class="nav-link">Clubs</a></li>
+</ul>
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
