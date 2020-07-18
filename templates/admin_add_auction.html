@@ -14,60 +14,60 @@
 
 {% block body %}
 <section class="ftco-section bg-light">
-			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col-md-6 text-center mb-5">
-						<h2 class="heading-section">Add Auction Details</h2>
-					</div>
-				</div>
-				<div class="row justify-content-center">
-					<div class="col-md-12">
-						<div class="wrapper">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-6 text-center mb-5">
+				<h2 class="heading-section">Add Auction Details</h2>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-md-12">
+				<div class="wrapper">
 
-							<div class="row no-gutters">
-								<div class="col-md-12">
-									<div class="contact-wrap w-100 p-md-5 p-4">
-										<h3 class="mb-4">Auction Details</h3>
-										<form method="POST" id="contactForm" name="contactForm" class="contactForm">
-											<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
-														<label class="label" for="auction">Auction Name</label>
-														<input type="text" class="form-control" name="auction" id="auction" placeholder="Auction Name">
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="form-group">
-														<label class="label" for="pigeon">Total Pigeon</label>
-														<input type="number" class="form-control" name="pigeon" id="pigeon" placeholder="Total Pigeon">
-													</div>
-												</div>
-												<div class="col-md-12">
-													<div class="form-group">
-														<label class="label" >Auction Details</label>
-														<textarea name="details" class="form-control" id="details" cols="30" rows="4" placeholder="Auction Details"></textarea>
-													</div>
-												</div>
-                                                <div class="col-md-12">
-													<div class="form-group">
-														<label class="label" >Auction Main Picture</label><br>
-														<input name="auction_image" type="file" accept="image/*" id="auction_image"/>
-													</div>
-												</div>
-												<div class="col-md-12">
-													<div class="form-group">
-														<input type="submit" value="Start" class="btn btn-primary">
-													</div>
-												</div>
+					<div class="row no-gutters">
+						<div class="col-md-12">
+							<div class="contact-wrap w-100 p-md-5 p-4">
+								<h3 class="mb-4">Auction Details</h3>
+								<form method="POST" id="contactForm" name="contactForm" class="contactForm">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="label" for="auction">Auction Name</label>
+												<input type="text" class="form-control" name="auction" id="auction" placeholder="Auction Name">
 											</div>
-										</form>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="label" for="pigeon">Total Pigeon</label>
+												<input type="number" class="form-control" name="pigeon" id="pigeon" placeholder="Total Pigeon">
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="label" >Auction Details</label>
+												<textarea name="details" class="form-control" id="details" cols="30" rows="4" placeholder="Auction Details"></textarea>
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="label" >Auction Main Picture</label><br>
+												<input name="auction_image" type="file" accept="image/*" id="auction_image"/>
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<input type="submit" value="Start" class="btn btn-primary">
+											</div>
+										</div>
 									</div>
-								</div>
+								</form>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</section>
+		</div>
+	</div>
+</section>
 
 {% endblock %}

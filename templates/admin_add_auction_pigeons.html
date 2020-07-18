@@ -1,0 +1,110 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block menu %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item active"><a href="{{url_for('admin_auction')}}" class="nav-link">Auction</a></li>
+    <li class="nav-item "><a href="{{url_for('admin_member')}}" class="nav-link">Member</a></li>
+    <li class="nav-item"><a href="{{url_for('admin_article')}}" class="nav-link">Articles</a></li>
+    <li class="nav-item"><a href="{{url_for('admin_club')}}" class="nav-link">Clubs</a></li>
+</ul>
+{% endblock %}
+
+{% block body %}
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section">Auction Pigeons</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="wrapper">
+
+                    <div class="row no-gutters">
+                        <div class="col-md-12">
+                            <div class="contact-wrap w-100 p-md-5 p-4">
+                                <h3 class="mb-4">Pigeon #1 Details</h3>
+                                <form method="POST" id="contactForm" name="contactForm" class="contactForm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="label" for="PigeonRing">Pigeon Ring Number</label>
+                                                <input type="text" class="form-control" name="auction" id="PigeonRing" placeholder="Pigeon Ring Number" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="PigeonName">Pigeon Name</label>
+                                                <input type="text" class="form-control" name="auction" id="PigeonName" placeholder="Pigeon Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="pigeon">Starting Price</label>
+                                                <input type="number" class="form-control" name="pigeon" id="pigeon" placeholder="Starting Price" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="PigeonGender">Pigeon Gender</label>
+                                                <input type="text" class="form-control" name="auction" id="PigeonGender" placeholder="Pigeon Gender" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="PigeonColor">Pigeon Color</label>
+                                                <input type="text" class="form-control" name="auction" id="PigeonColor" placeholder="Pigeon Color" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="BreedBy">Pigeon Breed by</label>
+                                                <input type="text" class="form-control" name="auction" id="BreedBy" placeholder="Pigeon Breed by" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="OfferBy">Pigeon Offered by</label>
+                                                <input type="text" class="form-control" name="auction" id="OfferBy" placeholder="Pigeon Offered by" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="label" >Pigeon Details</label>
+                                                <textarea name="details" class="form-control" id="details" cols="30" rows="4" placeholder="Pigeon Details"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="label" >Pigeon Main Picture</label><br>
+                                                <input name="PigeonMainPic" type="file" accept="image/*" id="PigeonMainPic"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="label" >Pedigree and other Pictures</label><br>
+                                                <input name="PigeonOthersPic" type="file" accept="image/*" id="PigeonOthersPic" multiple/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="submit" value="Done" class="btn btn-primary">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

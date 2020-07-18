@@ -300,6 +300,10 @@ def admin_auction():
 def admin_add_auction():
     return render_template('admin_add_auction.html')
 
+@app.route('/Admin/Auction/Add/Pigeons')
+def admin_add_auction_pigeons():
+    return render_template('admin_add_auction_pigeons.html')
+
 @app.route('/Admin/Member')
 def admin_member():
     return render_template('admin_member.html', userData={})
