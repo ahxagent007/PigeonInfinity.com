@@ -294,7 +294,7 @@ def about():
 
 @app.route('/Admin/Auction')
 def admin_auction():
-    return render_template('admin_auction.html', userData={})
+    return render_template('admin_auction.html')
 
 @app.route('/Admin/Member')
 def admin_member():
