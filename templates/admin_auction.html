@@ -15,19 +15,8 @@
 {% block body %}
 <row>
     <div class="col-md-12 col-lg-12 p-3 py-5 pl-lg-12 ftco-animate">
+        <a class="btn btn-success py-3 px-4" href="{{url_for('admin_add_auction')}}">Add Auction</a>
 
-        <form action="{{url_for('admin_auction')}}" class="appointment"  method="post">
-            <div class="row">
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <input type="submit" value="Add Auction" class="btn btn-success py-3 px-4">
-                    </div>
-                </div>
-
-
-            </div>
-        </form>
     </div>
     <!-- ============================================================== -->
     <!-- basic table  -->
