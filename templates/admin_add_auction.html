@@ -28,12 +28,15 @@
 						<div class="col-md-12">
 							<div class="contact-wrap w-100 p-md-5 p-4">
 								<h3 class="mb-4">Auction Details</h3>
-								<form method="POST" id="contactForm" name="contactForm" class="contactForm">
+								{% if error != ' ' %}
+									<h5 class="mb-4">{{error}}</h5>
+								{% endif %}
+								<form action="{{url_for('admin_add_auction')}}" method="POST" id="contactForm" name="contactForm" class="contactForm" enctype=multipart/form-data>
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group">
 												<label class="label" for="auction">Auction Name</label>
-												<input type="text" class="form-control" name="auction" id="auction" placeholder="Auction Name">
+												<input type="text" class="form-control" name="auctionName" id="auction" placeholder="Auction Name">
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -54,6 +57,19 @@
 												<input name="auction_image" type="file" accept="image/*" id="auction_image"/>
 											</div>
 										</div>
+
+										<div class="col-md-6">
+											<label for="startDate">Auction Start:</label>
+											<input type="date" id="startDate" name="startDate">
+											<input type="time" id="startTime" name="startTime">
+										</div>
+
+										<div class="col-md-6">
+											<label for="startDate">Auction End:</label>
+											<input type="date" id="endDate" name="endDate">
+											<input type="time" id="endTime" name="endTime">
+										</div>
+
 										<div class="col-md-12">
 											<div class="form-group">
 												<input type="submit" value="Start" class="btn btn-primary">
