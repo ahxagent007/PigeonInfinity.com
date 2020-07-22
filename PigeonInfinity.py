@@ -1,4 +1,5 @@
 import hashlib
+import json
 import sys
 import os
 import time
@@ -171,13 +172,14 @@ class DatabaseByPyMySQL:
             return 'USER EXISTED, TRY LOGIN'
 
 
-    def addAnimal(self, auctionName, pigeon, details, auctionStart, auctionEnd, filename):
+
+    def addAuctionEvent(self, auctionName, pigeon, details, auctionStart, auctionEnd, filename):
 
         try:
-
             # Adding
             sql1 = 'INSERT INTO AuctionEvent(AuctionName, AuctionDetails, TotalPigeon, AuctionStart, AuctionEnd, MainPicture, Currency)' \
-                   ' VALUES("{0}","{1}",{2},"{3}","{4}","{5}","BDT");'.format(auctionName, details, pigeon, auctionStart, auctionEnd, filename)
+                   ' VALUES("{0}","{1}",{2},"{3}","{4}","{5}","BDT");'.format(auctionName, details, pigeon,
+                                                                              auctionStart, auctionEnd, filename)
             print(sql1, flush=True)
             self.cursor.execute(sql1)
             self.conection.commit()
@@ -187,6 +189,34 @@ class DatabaseByPyMySQL:
             print('Error on addAnimal()', flush=True)
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
+    def addPigeon(self, AuctionID, PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, filename, otherPics):
+        json_format_pics = json.dumps(otherPics)
+        try:
+            # Adding
+            sql1 = 'INSERT INTO Pigeon(AuctionID, PigeonRing, PigeonName, Price, MainPic, AllPic, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, StartTime, EndTime)' \
+                   ' VALUES({0},"{1}","{2}",{3},"{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}");'\
+                .format(AuctionID, PigeonRing, PigeonName, StartingPrice, filename, json_format_pics, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd)
+            print(sql1, flush=True)
+            self.cursor.execute(sql1)
+            self.conection.commit()
+            return True
+
+        except:
+            print('Error on addPigeon()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
+
+    def getLastAuction(self):
+        sql_qry = 'SELECT * FROM AuctionEvent ORDER BY AuctionID DESC LIMIT 1;'
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getAllAnimals : ', str(data), flush=True)
+
+        if len(data)>0:
+            return data, True
+        else:
+            return data, False
 ###############################################################
 
 @app.route('/')
@@ -276,15 +306,13 @@ def registration():
 
     return render_template('register.html', userData={})
 
-
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/Admin/Auction')
 def admin_auction():
     return render_template('admin_auction.html')
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/Admin/Auction/Add', methods=['GET', 'POST'])
 def admin_add_auction():
@@ -329,10 +357,16 @@ def admin_add_auction():
 
                 print(str(status), flush=True)
 
-                '''if status:
-                    redirect(url_for('admin_add_auction_pigeons'))
+                if status:
+                    auc,sts = db.getLastAuction()
+                    session['totalPigeon'] = pigeon
+                    session['AuctionID'] = auc['AuctionID']
+                    session['AuctionName'] = auc['AuctionName']
+                    session['AuctionStart'] = auc['AuctionStart']
+                    session['AuctionEnd'] = auc['AuctionEnd']
+                    return redirect(url_for('admin_add_auction_pigeons'))
                 else:
-                    return render_template('admin_add_auction.html', error='Something went wrong')'''
+                    return render_template('admin_add_auction.html', error='Something went wrong')
 
         except HTTPError:
             print('Exception : ' + str(HTTPException), flush=True)
@@ -340,9 +374,73 @@ def admin_add_auction():
 
     return render_template('admin_add_auction.html')
 
-@app.route('/Admin/Auction/Add/Pigeons')
+@app.route('/Admin/Auction/Add/Pigeons', methods=['POST','GET'])
 def admin_add_auction_pigeons():
-    return render_template('admin_add_auction_pigeons.html')
+
+    data = {
+        'pigeonCount': int(session['totalPigeon']),
+        'AuctionID' : session['AuctionID'],
+        'AuctionStart' : session['AuctionStart'],
+        'AuctionEnd' : session['AuctionEnd'],
+        'AuctionName' : session['AuctionName']
+    }
+    #totalPigeons = int(session['totalPigeon'])
+
+    if request.method == 'POST':
+        for i in range(int(session['totalPigeon'])):
+            try:
+                if 'PigeonMainPic'+str(i+1) not in request.files:
+                    print('No file part', flush=True)
+                    return render_template('admin_add_auction.html', error='No picture selected')
+                file = request.files['PigeonMainPic'+str(i+1)]
+                # if user does not select file, browser also
+                # submit an empty part without filename
+                if file.filename == '':
+                    print('No selected file', flush=True)
+                    return render_template('admin_add_auction_pigeons.html', error='Only allow png, jpg formats')
+
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    cur_mili = str(current_milli_time())
+                    filename =  cur_mili + filename[-4:]
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+                    print(filename, flush=True)
+
+                    files = request.files.getlist('PigeonOthersPics'+str(i+1))
+                    imNo = 0
+                    otherPics = []
+                    for fi in files:
+                        finame = secure_filename(fi.filename)
+                        finame = cur_mili +str(imNo)+ finame[-4:]
+                        imNo += 1
+                        fi.save(os.path.join(app.config['UPLOAD_FOLDER'], finame))
+                        otherPics.append(filename)
+                    try:
+                        PigeonRing = request.form['PigeonRing'+str(i+1)]
+                        PigeonName = request.form['PigeonName'+str(i+1)]
+                        StartingPrice = request.form['StartingPrice'+str(i+1)]
+                        PigeonGender = request.form['PigeonGender'+str(i+1)]
+                        PigeonColor = request.form['PigeonColor'+str(i+1)]
+                        BreedBy = request.form['BreedBy'+str(i+1)]
+                        OfferBy = request.form['OfferBy'+str(i+1)]
+                        PigeonDetails = request.form['PigeonDetails'+str(i+1)]
+
+                    except:
+                        return render_template('admin_add_auction_pigeons.html', error='Missing information')
+                        print('Error = ', str(sys.exc_info()[0]), flush=True)
+
+                    db = DatabaseByPyMySQL()
+                    status = db.addPigeon(session['AuctionID'], PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, session['AuctionStart'], session['AuctionEnd'], filename, otherPics)
+                    print(str(status), flush=True)
+
+            except HTTPError:
+                print('Exception : ' + str(HTTPException), flush=True)
+                return render_template('admin_add_auction_pigeons.html', error='SOMETHING WENT WRONG', userData=userData)
+
+        return redirect(url_for('admin_auction'))
+
+    return render_template('admin_add_auction_pigeons.html', data = data)
 
 @app.route('/Profile')
 def profile():
