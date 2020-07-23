@@ -29,74 +29,76 @@
                 <div class="wrapper">
 
                     <div class="row no-gutters">
-                        {% for i in range(data['pigeonCount']) %}
+
                         <div class="col-md-12">
                             <div class="contact-wrap w-100 p-md-5 p-4">
-                                <h3 class="mb-4">Pigeon #{{i+1}} Details</h3>
-                                <form method="POST" id="contactForm" name="contactForm" class="contactForm">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="label" for="PigeonRing">Pigeon Ring Number</label>
-                                                <input type="text" class="form-control" name="PigeonRing{{i+1}}" id="PigeonRing" placeholder="Pigeon Ring Number" required>
+                                <form action="{{url_for('admin_add_auction_pigeons')}}" method="POST" id="contactForm" name="contactForm" class="contactForm" enctype=multipart/form-data>
+                                    {% for i in range(data['pigeonCount']) %}
+                                        <h3 class="mb-4" style="color:#0005a3;">Pigeon #{{i+1}} Details</h3>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label" for="PigeonRing">Pigeon Ring Number</label>
+                                                    <input type="text" class="form-control" name="PigeonRing{{i+1}}" id="PigeonRing" placeholder="Pigeon Ring Number" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="PigeonName">Pigeon Name</label>
+                                                    <input type="text" class="form-control" name="PigeonName{{i+1}}" id="PigeonName" placeholder="Pigeon Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="pigeon">Starting Price</label>
+                                                    <input type="number" class="form-control" name="StartingPrice{{i+1}}" id="pigeon" placeholder="Starting Price" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="PigeonGender">Pigeon Gender</label>
+                                                    <input type="text" class="form-control" name="PigeonGender{{i+1}}" id="PigeonGender" placeholder="Pigeon Gender" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="PigeonColor">Pigeon Color</label>
+                                                    <input type="text" class="form-control" name="PigeonColor{{i+1}}" id="PigeonColor" placeholder="Pigeon Color" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="BreedBy">Pigeon Breed by</label>
+                                                    <input type="text" class="form-control" name="BreedBy{{i+1}}" id="BreedBy" placeholder="Pigeon Breed by" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="OfferBy">Pigeon Offered by</label>
+                                                    <input type="text" class="form-control" name="OfferBy{{i+1}}" id="OfferBy" placeholder="Pigeon Offered by" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label" >Pigeon Details</label>
+                                                    <textarea name="PigeonDetails{{i+1}}" class="form-control" id="details" cols="30" rows="4" placeholder="Pigeon Details" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label" >Pigeon Main Picture</label><br>
+                                                    <input name="PigeonMainPic{{i+1}}" type="file" accept="image/*" id="PigeonMainPic"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label" >Pedigree and other Pictures</label><br>
+                                                    <input name="PigeonOthersPics{{i+1}}" type="file" accept="image/*" id="PigeonOthersPic" multiple/>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="label" for="PigeonName">Pigeon Name</label>
-                                                <input type="text" class="form-control" name="PigeonName{{i+1}}" id="PigeonName" placeholder="Pigeon Name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="label" for="pigeon">Starting Price</label>
-                                                <input type="number" class="form-control" name="StartingPrice{{i+1}}" id="pigeon" placeholder="Starting Price" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="label" for="PigeonGender">Pigeon Gender</label>
-                                                <input type="text" class="form-control" name="PigeonGender{{i+1}}" id="PigeonGender" placeholder="Pigeon Gender" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="label" for="PigeonColor">Pigeon Color</label>
-                                                <input type="text" class="form-control" name="PigeonColor{{i+1}}" id="PigeonColor" placeholder="Pigeon Color" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="label" for="BreedBy">Pigeon Breed by</label>
-                                                <input type="text" class="form-control" name="BreedBy{{i+1}}" id="BreedBy" placeholder="Pigeon Breed by" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="label" for="OfferBy">Pigeon Offered by</label>
-                                                <input type="text" class="form-control" name="OfferBy" id="OfferBy" placeholder="Pigeon Offered by" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="label" >Pigeon Details</label>
-                                                <textarea name="PigeonDetails{{i+1}}" class="form-control" id="details" cols="30" rows="4" placeholder="Pigeon Details"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="label" >Pigeon Main Picture</label><br>
-                                                <input name="PigeonMainPic{{i+1}}" type="file" accept="image/*" id="PigeonMainPic"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="label" >Pedigree and other Pictures</label><br>
-                                                <input name="PigeonOthersPics{{i+1}}" type="file" accept="image/*" id="PigeonOthersPic" multiple/>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    <br><br>
+                                    {% endfor %}
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <input type="submit" value="Done" class="btn btn-primary">
@@ -105,7 +107,7 @@
                                 </form>
                             </div>
                         </div>
-                        {% endfor %}
+
                     </div>
                 </div>
             </div>

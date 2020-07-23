@@ -190,12 +190,12 @@ class DatabaseByPyMySQL:
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
     def addPigeon(self, AuctionID, PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, filename, otherPics):
-        json_format_pics = json.dumps(otherPics)
+        print(otherPics)
         try:
             # Adding
             sql1 = 'INSERT INTO Pigeon(AuctionID, PigeonRing, PigeonName, Price, MainPic, AllPic, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, StartTime, EndTime)' \
                    ' VALUES({0},"{1}","{2}",{3},"{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}");'\
-                .format(AuctionID, PigeonRing, PigeonName, StartingPrice, filename, json_format_pics, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd)
+                .format(AuctionID, PigeonRing, PigeonName, StartingPrice, filename, otherPics, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd)
             print(sql1, flush=True)
             self.cursor.execute(sql1)
             self.conection.commit()
@@ -358,9 +358,7 @@ def allowed_file(filename):
 @app.route('/Admin/Auction')
 def admin_auction():
     DB = DatabaseByPyMySQL()
-
     data, sts = DB.getAllAuctions()
-
     return render_template('admin_auction.html', auctions = data)
 
 @app.route('/Admin/Auction/Add', methods=['GET', 'POST'])
@@ -439,14 +437,16 @@ def admin_add_auction_pigeons():
         for i in range(int(session['totalPigeon'])):
             try:
                 if 'PigeonMainPic'+str(i+1) not in request.files:
-                    print('No file part', flush=True)
-                    return render_template('admin_add_auction.html', error='No picture selected')
+                    print('No file part PigeonMainPic'+str(i+1), flush=True)
+                    for d in request.files:
+                        print(d)
+                    return render_template('admin_add_auction_pigeons.html', error='No picture selected', data = data)
                 file = request.files['PigeonMainPic'+str(i+1)]
                 # if user does not select file, browser also
                 # submit an empty part without filename
                 if file.filename == '':
                     print('No selected file', flush=True)
-                    return render_template('admin_add_auction_pigeons.html', error='Only allow png, jpg formats')
+                    return render_template('admin_add_auction_pigeons.html', error='Only allow png, jpg formats', data = data)
 
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
@@ -454,7 +454,7 @@ def admin_add_auction_pigeons():
                     filename =  cur_mili + filename[-4:]
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-                    print(filename, flush=True)
+                    print('PigeonOthersPics'+str(i+1)+' :: '+filename, flush=True)
 
                     files = request.files.getlist('PigeonOthersPics'+str(i+1))
                     imNo = 0
@@ -464,7 +464,8 @@ def admin_add_auction_pigeons():
                         finame = cur_mili +str(imNo)+ finame[-4:]
                         imNo += 1
                         fi.save(os.path.join(app.config['UPLOAD_FOLDER'], finame))
-                        otherPics.append(filename)
+                        print('PigeonMainPic' + str(i+1) + ' :: ' + finame, flush=True)
+                        otherPics.append(finame)
                     try:
                         PigeonRing = request.form['PigeonRing'+str(i+1)]
                         PigeonName = request.form['PigeonName'+str(i+1)]
@@ -476,7 +477,7 @@ def admin_add_auction_pigeons():
                         PigeonDetails = request.form['PigeonDetails'+str(i+1)]
 
                     except:
-                        return render_template('admin_add_auction_pigeons.html', error='Missing information')
+                        return render_template('admin_add_auction_pigeons.html', error='Missing information', data = data)
                         print('Error = ', str(sys.exc_info()[0]), flush=True)
 
                     db = DatabaseByPyMySQL()
@@ -485,7 +486,7 @@ def admin_add_auction_pigeons():
 
             except HTTPError:
                 print('Exception : ' + str(HTTPException), flush=True)
-                return render_template('admin_add_auction_pigeons.html', error='SOMETHING WENT WRONG', userData=userData)
+                return render_template('admin_add_auction_pigeons.html', error='SOMETHING WENT WRONG', data = data)
 
         return redirect(url_for('admin_auction'))
 
