@@ -211,12 +211,57 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getAllAnimals : ', str(data), flush=True)
+        print('getLastAuction : ', str(data), flush=True)
 
         if len(data)>0:
-            return data, True
+            return data[0], True
         else:
             return data, False
+
+    def getAllAuctions(self):
+        sql_qry = 'SELECT * FROM AuctionEvent;'
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getAllAuctions : ', str(data), flush=True)
+
+        if len(data)>0:
+            data2 = []
+            for d in data:
+                total, pigeons = self.getTotalAmountByAuctionID(d['AuctionID'])
+                d['TotalAmount'] = total
+                d['Pigeons'] = pigeons
+                bids = self.getTotalBidsByAuctionID(d['AuctionID'])
+                d['Bids'] = bids
+                data2.append(d)
+
+            return data2, True
+        else:
+            return data, False
+
+    def getTotalAmountByAuctionID(self, ID):
+        sql_qry = 'SELECT SUM(price) as Total , COUNT(PigeonID)as Pigeons FROM Pigeon WHERE AuctionID = {0};'.format(ID)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getTotalAmoutnByAuctionID : ', str(data), flush=True)
+
+        if len(data)>0:
+            return data[0]['Total'], data[0]['Pigeons']
+        else:
+            return data
+
+    def getTotalBidsByAuctionID(self, ID):
+        sql_qry = 'SELECT COUNT(BidID)as Bids FROM Bid WHERE AuctionID = {0};'.format(ID)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getTotalAmoutnByAuctionID : ', str(data), flush=True)
+
+        if len(data)>0:
+            return data[0]['Bids']
+        else:
+            return data
 ###############################################################
 
 @app.route('/')
@@ -312,7 +357,11 @@ def allowed_file(filename):
 
 @app.route('/Admin/Auction')
 def admin_auction():
-    return render_template('admin_auction.html')
+    DB = DatabaseByPyMySQL()
+
+    data, sts = DB.getAllAuctions()
+
+    return render_template('admin_auction.html', auctions = data)
 
 @app.route('/Admin/Auction/Add', methods=['GET', 'POST'])
 def admin_add_auction():

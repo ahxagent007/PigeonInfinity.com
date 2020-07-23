@@ -38,14 +38,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                        {% for auc in auctions %}
                             <tr>
-                                <td>1</td>
-                                <td>System Architect</td>
-                                <td>Edinburgh</td>
-                                <td>2011/04/25</td>
-                                <td>5004</td>
-                                <td>$320,800</td>
+                                <td>{{auc['AuctionID']}}</td>
+                                <td>{{auc['AuctionName']}}</td>
+                                <td>{{auc['AuctionStart']}} - {{auc['AuctionEnd']}}</td>
+                                <td>{{auc['Pigeons']}}</td>
+                                <td>{{auc['Bids']}}</td>
+                                <td>{{auc['TotalAmount']}}</td>
                             </tr>
+                        {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr>
