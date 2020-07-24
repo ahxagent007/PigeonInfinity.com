@@ -18,18 +18,7 @@
 
 {% block body %}
 
-    <button onclick="sendTimeToServer()">update time</button>
-    <div id="time">Time: </div>
-
-    <script>
-    function sendTimeToServer(){
-        var time = new Date();
-        var i = document.createElement("img");
-        i.src = "/getTime?time=" + time;
-        document.getElementById("time").innerHTML = time;
-    }
-    </script>
-
+    {% if runningAuc|length > 0 %}
     <section class="ftco-section bg-light">
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
@@ -38,24 +27,29 @@
           </div>
         </div>
         <div class="row d-flex">
-          <div class="col-md-12 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/images/image_1.jpg');">
-              </a>
-              <div class="text p-4">
-              	<div class="meta mb-2">
-                  <div><a href="#">Ends in</a></div>
-                  <div><a href="#">3 Days 12 hours 45 mins 2 secs</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-certificate"></span> 3</a></div>
-                </div>
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-              </div>
-            </div>
-          </div>
+            {% for r in runningAuc %}
+                <div class="col-md-12 ftco-animate">
+                    <div class="blog-entry align-self-stretch">
+                      <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/UPLOADS/{{r['MainPicture']}}');">
+                      </a>
+                      <div class="text p-4">
+                        <div class="meta mb-2">
+                          <div><a href="#">Ends in</a></div>
+                          <div><a href="#">{{r['AuctionStart']}} - {{r['AuctionEnd']}}</a></div>
+                          <div><a href="#" class="meta-chat"><span class="fa fa-certificate"></span> {{r['Pigeons']}}</a></div>
+                        </div>
+                        <h3 class="heading"><a href="#">{{r['AuctionName']}}</a></h3>
+                        <p><a href="#">{{r['AuctionDetails']}}</a></p>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor %}
         </div>
       </div>
     </section>
+    {% endif %}
 
+    {% if upcommingAuc|length > 0 %}
     <section class="ftco-section bg-light">
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
@@ -64,52 +58,28 @@
           </div>
         </div>
         <div class="row d-flex">
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/images/image_1.jpg');">
-              </a>
-              <div class="text p-4">
-              	<div class="meta mb-2">
-                  <div><a href="#">Starts in</a></div>
-                  <div><a href="#">3 Days 12 hours 45 mins 2 secs</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
-                </div>
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/images/image_2.jpg');">
-              </a>
-              <div class="text p-4">
-              	<div class="meta mb-2">
-                  <div><a href="#">Starts in</a></div>
-                  <div><a href="#">3 Days 12 hours 45 mins 2 secs</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
-                </div>
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/images/image_3.jpg');">
-              </a>
-              <div class="text p-4">
-              	<div class="meta mb-2">
-                  <div><a href="#">Starts in</a></div>
-                  <div><a href="#">3 Days 12 hours 45 mins 2 secs</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
-                </div>
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-              </div>
-            </div>
-          </div>
+            {% for u in upcommingAuc %}
+                <div class="col-md-4 d-flex ftco-animate">
+                    <div class="blog-entry align-self-stretch">
+                      <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/UPLOADS/{{u['MainPicture']}}');">
+                      </a>
+                      <div class="text p-4">
+                        <div class="meta mb-2">
+                          <div><a href="#">Starts in</a></div>
+                          <div><a href="#">{{u['AuctionStart']}} - {{u['AuctionEnd']}}</a></div>
+                          <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> {{u['Pigeons']}}</a></div>
+                        </div>
+                        <h3 class="heading"><a href="#">{{u['AuctionName']}}</a></h3>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor %}
         </div>
       </div>
     </section>
+    {% endif %}
 
+    {% if pastAuc|length >0 %}
     <section class="ftco-section bg-light">
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
@@ -119,49 +89,24 @@
         </div>
 
         <div class="row d-flex">
-          <div class="col-md-4 d-flex ftco-animate">
+            {% for p in pastAuc %}
+                <div class="col-md-4 d-flex ftco-animate">
             <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/images/image_1.jpg');">
+              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/UPLOADS/{{p['MainPicture']}}');">
               </a>
               <div class="text p-4">
               	<div class="meta mb-2">
-                  <div><a href="#">April 07, 2020</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
+                  <div><a href="#">{{p['AuctionStart']}} - {{p['AuctionEnd']}}</a></div>
+                  <div><a href="#">Pigeons</a></div>
+                  <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> {{p['Pigeons']}}</a></div>
                 </div>
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
+                <h3 class="heading"><a href="#">{{p['AuctionName']}}</a></h3>
               </div>
             </div>
           </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/images/image_2.jpg');">
-              </a>
-              <div class="text p-4">
-              	<div class="meta mb-2">
-                  <div><a href="#">April 07, 2020</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
-                </div>
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('static/images/image_3.jpg');">
-              </a>
-              <div class="text p-4">
-              	<div class="meta mb-2">
-                  <div><a href="#">April 07, 2020</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
-                </div>
-                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-              </div>
-            </div>
-          </div>
+            {% endfor %}
         </div>
       </div>
     </section>
+    {% endif %}
 {% endblock %}
