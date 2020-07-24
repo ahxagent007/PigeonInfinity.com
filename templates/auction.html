@@ -1,6 +1,7 @@
 {% extends 'base_main.html' %}
 
 {% block title %}
+    <title>Auctions</title>
 {% endblock %}
 
 {% block menu %}
@@ -16,6 +17,19 @@
 {% endblock %}
 
 {% block body %}
+
+    <button onclick="sendTimeToServer()">update time</button>
+    <div id="time">Time: </div>
+
+    <script>
+    function sendTimeToServer(){
+        var time = new Date();
+        var i = document.createElement("img");
+        i.src = "/getTime?time=" + time;
+        document.getElementById("time").innerHTML = time;
+    }
+    </script>
+
     <section class="ftco-section bg-light">
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">

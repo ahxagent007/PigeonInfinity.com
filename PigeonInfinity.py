@@ -7,10 +7,13 @@ from http.client import HTTPException
 
 from flask import Flask, render_template, request, flash, url_for, jsonify, session, redirect
 import pymysql
-from datetime import datetime
+from datetime import datetime, date
 
 from requests import HTTPError
 from werkzeug.utils import secure_filename
+
+import pytz
+from pytz import timezone
 
 UPLOAD_FOLDER = 'static/UPLOADS/'
 ALLOWED_EXTENSIONS = { 'png', 'jpg'}  # {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -27,12 +30,11 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 class DatabaseByPyMySQL:
     def __init__(self):
         host = "localhost"
-        user = "root"
-        password = ""
-        db = "flask_pigeon_infinity"
+        user = "root" # pigemkwh_PI
+        password = "" #  QT^SiM(9]#gJ
+        db = "flask_pigeon_infinity" # pigemkwh_pigeon_infinity
 
-        self.conection = pymysql.connect(host=host, user=user, password=password, db=db,
-                                         cursorclass=pymysql.cursors.DictCursor)
+        self.conection = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.DictCursor)
         self.cursor = self.conection.cursor()
 
     '''def addSome(self):
@@ -189,6 +191,7 @@ class DatabaseByPyMySQL:
             print('Error on addAnimal()', flush=True)
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
+
     def addPigeon(self, AuctionID, PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, filename, otherPics):
         print(otherPics)
         try:
@@ -223,7 +226,6 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getAllAuctions : ', str(data), flush=True)
 
         if len(data)>0:
             data2 = []
@@ -244,7 +246,6 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getTotalAmoutnByAuctionID : ', str(data), flush=True)
 
         if len(data)>0:
             return data[0]['Total'], data[0]['Pigeons']
@@ -255,8 +256,6 @@ class DatabaseByPyMySQL:
         sql_qry = 'SELECT COUNT(BidID)as Bids FROM Bid WHERE AuctionID = {0};'.format(ID)
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
-
-        print('getTotalAmoutnByAuctionID : ', str(data), flush=True)
 
         if len(data)>0:
             return data[0]['Bids']
@@ -492,6 +491,58 @@ def admin_add_auction_pigeons():
 
     return render_template('admin_add_auction_pigeons.html', data = data)
 
+
+@app.route('/Auction')
+def auction():
+    DB = DatabaseByPyMySQL()
+    data, sts = DB.getAllAuctions()
+
+    runningAuc = []
+    upcommingAuc = []
+    pastAuc = []
+
+    for d in data:
+        curTime = time.strftime('%Y %m %d %H:%M:%S')
+
+        dt_obj = datetime.strptime(curTime,
+                                   '%Y %m %d %H:%M:%S')
+        curMilliSec = dt_obj.timestamp() * 1000
+
+        dt_obj = datetime.strptime(d['AuctionStart'],
+                                   '%Y-%m-%d %H:%M')
+        aucMilliSecStart = dt_obj.timestamp() * 1000
+
+        #print(str(curTime)+' :: '+str(d['AuctionStart']))
+        #print(str(curMilliSec)+' :: '+str(aucMilliSecStart))
+
+        if(curMilliSec>=aucMilliSecStart):
+            #print('Running or past')
+            dt_obj = datetime.strptime(d['AuctionEnd'],
+                                       '%Y-%m-%d %H:%M')
+            aucMilliSecEnd = dt_obj.timestamp() * 1000
+
+            #print(str(curTime) + ' :: ' + str(d['AuctionEnd']))
+            #print(str(curMilliSec) + ' :: ' + str(aucMilliSecEnd))
+
+            if(curMilliSec<aucMilliSecEnd):
+                runningAuc.append(d)
+                #print('Running')
+            else:
+                pastAuc.append(d)
+                #print('Past')
+
+        elif(curMilliSec<aucMilliSecStart):
+            upcommingAuc.append(d)
+            #print('Upcomming')
+
+    return render_template('auction.html', runningAuc=runningAuc, upcommingAuc=upcommingAuc, pastAuc=pastAuc)
+
+@app.route("/getTime", methods=['GET'])
+def getTime():
+    print("browser time: ", request.args.get("time"))
+    print("server time : ", time.strftime('%A %B, %d %Y %H:%M:%S'))
+    return "Done"
+
 @app.route('/Profile')
 def profile():
     return render_template('profile.html', userData={})
@@ -500,9 +551,6 @@ def profile():
 def article():
     return render_template('article.html', userData={})
 
-@app.route('/Auction')
-def auction():
-    return render_template('auction.html', userData={})
 
 @app.route('/Auction/<auction_no>')
 def single_auction(auction_no):
@@ -557,4 +605,4 @@ def computeMD5hash(my_string):
 
 if __name__ == '__main__':
     app.debug = True
-    app.run()
+    app.run(debug=True)
