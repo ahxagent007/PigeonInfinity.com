@@ -22,6 +22,8 @@
 
     <link rel="stylesheet" href="{{url_for('static', filename='css/flaticon.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+
   </head>
   <body>
 
@@ -174,16 +176,38 @@
     <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
+      
+    <script src="https://cdn.polyfill.io/v3/polyfill.js?features=default,String.prototype.repeat,Array.prototype.find,Array.prototype.findIndex,Math.trunc,Math.sign,Object.is"></script>
+    <script src="{{ url_for('static', filename='xian/luxon.js') }}"></script>
+
 
     <script>
+        
         function getDateTime() {
-            let now     = new Date();
+            
+            /*let now     = new Date();
+            now.toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })
+            
             let year    = now.getFullYear();
             let month   = now.getMonth()+1;
             let day     = now.getDate();
             let hour    = now.getHours();
             let minute  = now.getMinutes();
-            let second  = now.getSeconds();
+            let second  = now.getSeconds();*/
+            
+            let DateTime = luxon.DateTime;
+            
+            //DateTime.fromObject({zone: 'America/Los_Angeles'}) // now, but expressed in LA's local time
+            let reZoned = DateTime.local().setZone('Asia/Dhaka') // same
+            
+            let now = reZoned;
+            
+            let year    = now.year;
+            let month   = now.month;
+            let day     = now.day;
+            let hour    = now.hour;
+            let minute  = now.minute;
+            let second  = now.second;
 
             if(month.toString().length == 1) {
                  month = '0'+month;
@@ -200,8 +224,10 @@
             if(second.toString().length == 1) {
                  second = '0'+second;
             }
+            //let name2 = "{{session['name']}}";
+
             var dateTime = day+'/'+month+'/'+year+' '+hour+':'+minute+':'+second;
-             return dateTime;
+            return dateTime;
         }
 
         // example usage: realtime clock
@@ -211,5 +237,7 @@
     }, 1000);
 
     </script>
+    {% block custom_js %}
+    {% endblock %}
   </body>
 </html>

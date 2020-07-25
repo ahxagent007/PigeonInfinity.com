@@ -231,7 +231,10 @@ class DatabaseByPyMySQL:
             data2 = []
             for d in data:
                 total, pigeons = self.getTotalAmountByAuctionID(d['AuctionID'])
-                d['TotalAmount'] = total
+                if total is not None:
+                    d['TotalAmount'] = int(total)
+                else:
+                    d['TotalAmount'] = 0
                 d['Pigeons'] = pigeons
                 bids = self.getTotalBidsByAuctionID(d['AuctionID'])
                 d['Bids'] = bids

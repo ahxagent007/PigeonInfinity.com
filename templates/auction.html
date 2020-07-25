@@ -35,7 +35,7 @@
                       <div class="text p-4">
                         <div class="meta mb-2">
                           <div><a href="#">Ends in</a></div>
-                          <div><a href="#">{{r['AuctionStart']}} - {{r['AuctionEnd']}}</a></div>
+                          <div><a href="#" id="ends{{r['AuctionID']}}"></a></div>
                           <div><a href="#" class="meta-chat"><span class="fa fa-certificate"></span> {{r['Pigeons']}}</a></div>
                         </div>
                         <h3 class="heading"><a href="#">{{r['AuctionName']}}</a></h3>
@@ -109,4 +109,70 @@
       </div>
     </section>
     {% endif %}
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript">
+        
+        //let runningAuc = "{{runningAuc|length}}";
+
+        function EndingTimeDiff(endingTime) {
+
+            let DateTime = luxon.DateTime;
+            let now = DateTime.local().setZone('Asia/Dhaka')        
+            let nowMilis = now. toMillis();
+
+            console.log(nowMilis);
+            /*let year    = now.year;
+            let month   = now.month;
+            let day     = now.day;
+            let hour    = now.hour;
+            let minute  = now.minute;
+            let second  = now.second;*/
+
+            //let y = endingTime.substring(0,3);
+            //console.log(y);
+
+            let auctionEndDateTime = new Date(endingTime);
+            let aucEndsMilis = auctionEndDateTime.getTime();
+            //console.log(aucEndsMilis);
+
+            endsIn = aucEndsMilis - nowMilis;
+
+            if(endsIn<=0){
+                location.reload(); 
+            }
+
+            days = parseInt(endsIn/86400000);
+            hours = parseInt((endsIn%86400000)/3600000);
+            mins = parseInt((endsIn%3600000)/60000);
+            secs = parseInt((endsIn%60000)/1000);        
+
+            /*let Y = auctionEndDateTime.getFullYear();
+            let M = auctionEndDateTime.getMonth();
+            let D = auctionEndDateTime.getDate();
+            let H = auctionEndDateTime.getHours();
+            let S = auctionEndDateTime.getSeconds();
+            let ms = auctionEndDateTime.getMilliseconds();*/            
+
+            let ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
+            //console.log(ends);
+            return ends;
+        }
+        
+        let runningAuc = {{runningAuc|safe}};
+        console.log(runningAuc);
+        
+        setInterval(function(){
+                let i;
+                for(i=0; i<runningAuc.length; i++){                        
+                    endingTime = EndingTimeDiff(runningAuc[i]['AuctionEnd']);
+                    document.getElementById("ends"+runningAuc[i]['AuctionID']).innerHTML = endingTime;
+                }               
+
+            }, 1000);
+        
+
+    
+</script>
 {% endblock %}
