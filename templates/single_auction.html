@@ -16,13 +16,13 @@
 {% endblock %}
 
 {% block body %}
-    <section class="hero-wrap hero-wrap-2" style="background-image: url({{url_for('static', filename='images/bg_2.jpg')}});" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url({{url_for('static', filename='UPLOADS/'+auc['MainPicture'])}});" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text align-items-end">
           <div class="col-md-9 ftco-animate pb-5">
-              <h1 class="mb-0 bread">Auction name</h1>
-              <p class="breadcrumbs mb-2">Details about hte auction asd asdo askdoas kdasodk aosdk oasdoaso </p>
+              <h1 class="mb-0 bread">{{auc['AuctionName']}}</h1>
+              <p class="breadcrumbs mb-2">{{auc['AuctionDetails']}}</p>
 
           </div>
         </div>
@@ -217,4 +217,70 @@
     </section>
 
 
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript">
+
+        //let runningAuc = "{{runningAuc|length}}";
+
+        function EndingTimeDiff(endingTime) {
+
+            let DateTime = luxon.DateTime;
+            let now = DateTime.local().setZone('Asia/Dhaka')
+            let nowMilis = now. toMillis();
+
+            console.log(nowMilis);
+            /*let year    = now.year;
+            let month   = now.month;
+            let day     = now.day;
+            let hour    = now.hour;
+            let minute  = now.minute;
+            let second  = now.second;*/
+
+            //let y = endingTime.substring(0,3);
+            //console.log(y);
+
+            let auctionEndDateTime = new Date(endingTime);
+            let aucEndsMilis = auctionEndDateTime.getTime();
+            //console.log(aucEndsMilis);
+
+            endsIn = aucEndsMilis - nowMilis;
+
+            if(endsIn<=0){
+                location.reload();
+            }
+
+            days = parseInt(endsIn/86400000);
+            hours = parseInt((endsIn%86400000)/3600000);
+            mins = parseInt((endsIn%3600000)/60000);
+            secs = parseInt((endsIn%60000)/1000);
+
+            /*let Y = auctionEndDateTime.getFullYear();
+            let M = auctionEndDateTime.getMonth();
+            let D = auctionEndDateTime.getDate();
+            let H = auctionEndDateTime.getHours();
+            let S = auctionEndDateTime.getSeconds();
+            let ms = auctionEndDateTime.getMilliseconds();*/
+
+            let ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
+            //console.log(ends);
+            return ends;
+        }
+
+        let runningAuc = {{runningAuc|safe}};
+        console.log(runningAuc);
+
+        setInterval(function(){
+                let i;
+                for(i=0; i<runningAuc.length; i++){
+                    endingTime = EndingTimeDiff(runningAuc[i]['AuctionEnd']);
+                    document.getElementById("ends"+runningAuc[i]['AuctionID']).innerHTML = endingTime;
+                }
+
+            }, 1000);
+
+
+
+</script>
 {% endblock %}

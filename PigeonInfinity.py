@@ -210,7 +210,7 @@ class DatabaseByPyMySQL:
             return False
 
     def getLastAuction(self):
-        sql_qry = 'SELECT * FROM AuctionEvent ORDER BY AuctionID DESC LIMIT 1;'
+        sql_qry = 'SELECT * FROM auctionevent ORDER BY AuctionID DESC LIMIT 1;'
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
@@ -222,7 +222,7 @@ class DatabaseByPyMySQL:
             return data, False
 
     def getAllAuctions(self):
-        sql_qry = 'SELECT * FROM AuctionEvent;'
+        sql_qry = 'SELECT * FROM auctionevent;'
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
@@ -264,6 +264,18 @@ class DatabaseByPyMySQL:
             return data[0]['Bids']
         else:
             return data
+
+    def getAuctionByID(self, id):
+        sql_qry = 'SELECT * FROM auctionevent WHERE AuctionID = {0};'.format(id)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getAuctionByID : ', str(data[0]), flush=True)
+
+        if len(data) > 0:
+            return data[0], True
+        else:
+            return data, False
 ###############################################################
 
 @app.route('/')
@@ -356,6 +368,112 @@ def registration():
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
+@app.route('/Auction')
+def auction():
+    DB = DatabaseByPyMySQL()
+    data, sts = DB.getAllAuctions()
+
+    runningAuc = []
+    upcommingAuc = []
+    pastAuc = []
+
+    for d in data:
+        curTime = time.strftime('%Y %m %d %H:%M:%S')
+
+        dt_obj = datetime.strptime(curTime,
+                                   '%Y %m %d %H:%M:%S')
+        curMilliSec = dt_obj.timestamp() * 1000
+
+        dt_obj = datetime.strptime(d['AuctionStart'],
+                                   '%Y-%m-%d %H:%M')
+        aucMilliSecStart = dt_obj.timestamp() * 1000
+
+        #print(str(curTime)+' :: '+str(d['AuctionStart']))
+        #print(str(curMilliSec)+' :: '+str(aucMilliSecStart))
+
+        if(curMilliSec>=aucMilliSecStart):
+            #print('Running or past')
+            dt_obj = datetime.strptime(d['AuctionEnd'],
+                                       '%Y-%m-%d %H:%M')
+            aucMilliSecEnd = dt_obj.timestamp() * 1000
+
+            #print(str(curTime) + ' :: ' + str(d['AuctionEnd']))
+            #print(str(curMilliSec) + ' :: ' + str(aucMilliSecEnd))
+
+            if(curMilliSec<aucMilliSecEnd):
+                runningAuc.append(d)
+                #print('Running')
+            else:
+                pastAuc.append(d)
+                #print('Past')
+
+        elif(curMilliSec<aucMilliSecStart):
+            upcommingAuc.append(d)
+            #print('Upcomming')
+
+    return render_template('auction.html', runningAuc=runningAuc, upcommingAuc=upcommingAuc, pastAuc=pastAuc)
+
+
+@app.route('/Auction/<auction_no>')
+def single_auction(auction_no):
+
+    DB = DatabaseByPyMySQL()
+    auc,sts = DB.getAuctionByID(auction_no)
+
+    return render_template('single_auction.html', auc=auc)
+
+@app.route("/getTime", methods=['GET'])
+def getTime():
+    print("browser time: ", request.args.get("time"))
+    print("server time : ", time.strftime('%A %B, %d %Y %H:%M:%S'))
+    return "Done"
+
+@app.route('/Profile')
+def profile():
+    return render_template('profile.html', userData={})
+
+@app.route('/Articles')
+def article():
+    return render_template('article.html', userData={})
+
+
+
+@app.route('/Pigeon/<pigeon>')
+def pigeon(pigeon):
+    return render_template('pigeon.html', userData={})
+
+@app.route('/Privacy')
+def privacy():
+    return render_template('profile.html', userData={})
+
+@app.route('/Rules')
+def rules():
+    return render_template('rules.html', userData={})
+
+@app.route('/Contact')
+def contact():
+    return render_template('contact.html', userData={})
+
+@app.route('/Clubs')
+def club():
+    return render_template('contact.html', userData={})
+
+@app.route('/Buy')
+def buy():
+    return render_template('contact.html', userData={})
+
+@app.route('/About')
+def about():
+    return render_template('contact.html', userData={})
+
+
+@app.route('/Admin')
+def admin():
+    return 'admin'
+
 
 @app.route('/Admin/Auction')
 def admin_auction():
@@ -493,100 +611,6 @@ def admin_add_auction_pigeons():
         return redirect(url_for('admin_auction'))
 
     return render_template('admin_add_auction_pigeons.html', data = data)
-
-
-@app.route('/Auction')
-def auction():
-    DB = DatabaseByPyMySQL()
-    data, sts = DB.getAllAuctions()
-
-    runningAuc = []
-    upcommingAuc = []
-    pastAuc = []
-
-    for d in data:
-        curTime = time.strftime('%Y %m %d %H:%M:%S')
-
-        dt_obj = datetime.strptime(curTime,
-                                   '%Y %m %d %H:%M:%S')
-        curMilliSec = dt_obj.timestamp() * 1000
-
-        dt_obj = datetime.strptime(d['AuctionStart'],
-                                   '%Y-%m-%d %H:%M')
-        aucMilliSecStart = dt_obj.timestamp() * 1000
-
-        #print(str(curTime)+' :: '+str(d['AuctionStart']))
-        #print(str(curMilliSec)+' :: '+str(aucMilliSecStart))
-
-        if(curMilliSec>=aucMilliSecStart):
-            #print('Running or past')
-            dt_obj = datetime.strptime(d['AuctionEnd'],
-                                       '%Y-%m-%d %H:%M')
-            aucMilliSecEnd = dt_obj.timestamp() * 1000
-
-            #print(str(curTime) + ' :: ' + str(d['AuctionEnd']))
-            #print(str(curMilliSec) + ' :: ' + str(aucMilliSecEnd))
-
-            if(curMilliSec<aucMilliSecEnd):
-                runningAuc.append(d)
-                #print('Running')
-            else:
-                pastAuc.append(d)
-                #print('Past')
-
-        elif(curMilliSec<aucMilliSecStart):
-            upcommingAuc.append(d)
-            #print('Upcomming')
-
-    return render_template('auction.html', runningAuc=runningAuc, upcommingAuc=upcommingAuc, pastAuc=pastAuc)
-
-@app.route("/getTime", methods=['GET'])
-def getTime():
-    print("browser time: ", request.args.get("time"))
-    print("server time : ", time.strftime('%A %B, %d %Y %H:%M:%S'))
-    return "Done"
-
-@app.route('/Profile')
-def profile():
-    return render_template('profile.html', userData={})
-
-@app.route('/Articles')
-def article():
-    return render_template('article.html', userData={})
-
-
-@app.route('/Auction/<auction_no>')
-def single_auction(auction_no):
-    return render_template('single_auction.html', userData={})
-
-@app.route('/Pigeon/<pigeon>')
-def pigeon(pigeon):
-    return render_template('pigeon.html', userData={})
-
-@app.route('/Privacy')
-def privacy():
-    return render_template('profile.html', userData={})
-
-@app.route('/Rules')
-def rules():
-    return render_template('rules.html', userData={})
-
-@app.route('/Contact')
-def contact():
-    return render_template('contact.html', userData={})
-
-@app.route('/Clubs')
-def club():
-    return render_template('contact.html', userData={})
-
-@app.route('/Buy')
-def buy():
-    return render_template('contact.html', userData={})
-
-@app.route('/About')
-def about():
-    return render_template('contact.html', userData={})
-
 
 @app.route('/Admin/Member')
 def admin_member():
