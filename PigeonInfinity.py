@@ -276,6 +276,18 @@ class DatabaseByPyMySQL:
             return data[0], True
         else:
             return data, False
+
+    def getPigeonsByAuctionID(self, id):
+        sql_qry = 'SELECT * FROM pigeon WHERE AuctionID = {0};'.format(id)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getPigeonsByAuctionID : ', str(data), flush=True)
+
+        if len(data) > 0:
+            return data, True
+        else:
+            return data, False
 ###############################################################
 
 @app.route('/')
@@ -369,8 +381,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-
 @app.route('/Auction')
 def auction():
     DB = DatabaseByPyMySQL()
@@ -422,8 +432,24 @@ def single_auction(auction_no):
 
     DB = DatabaseByPyMySQL()
     auc,sts = DB.getAuctionByID(auction_no)
+    pgs, sts = DB.getPigeonsByAuctionID(auction_no)
 
-    return render_template('single_auction.html', auc=auc)
+    curTime = time.strftime('%Y %m %d %H:%M:%S')
+
+    dt_obj = datetime.strptime(curTime,
+                               '%Y %m %d %H:%M:%S')
+    curMilliSec = dt_obj.timestamp() * 1000
+
+    dt_obj = datetime.strptime(auc['AuctionEnd'],
+                               '%Y-%m-%d %H:%M')
+    aucMilliSecEnd = dt_obj.timestamp() * 1000
+
+    if (curMilliSec < aucMilliSecEnd):
+        running = True
+    else:
+        running = False
+
+    return render_template('single_auction.html', auc=auc, pgs=pgs, running=running)
 
 @app.route("/getTime", methods=['GET'])
 def getTime():
