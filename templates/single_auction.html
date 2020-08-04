@@ -36,7 +36,7 @@
           <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
             <div class="block-18 text-center">
               <div class="text">
-                <strong class="number" data-number="2">0</strong>
+                <strong class="number" id="a_days"></strong>
               </div>
               <div class="text">
               	<span>Days</span>
@@ -46,7 +46,7 @@
           <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
             <div class="block-18 text-center">
               <div class="text">
-                <strong class="number" data-number="12">0</strong>
+                <strong class="number" id="a_hours"></strong>
               </div>
               <div class="text">
               	<span>Hours</span>
@@ -56,7 +56,7 @@
           <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
             <div class="block-18 text-center">
               <div class="text">
-                <strong class="number" data-number="45">0</strong>
+                <strong class="number" id="a_mins"></strong>
               </div>
               <div class="text">
               	<span>Minutes</span>
@@ -66,7 +66,7 @@
           <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
             <div class="block-18 text-center">
               <div class="text">
-                <strong class="number" data-number="15">0</strong>
+                <strong class="number" id="a_secs"></strong>
               </div>
               <div class="text">
               	<span>Seconds</span>
@@ -89,18 +89,18 @@
           {% for p in pgs %}
           <div class="col-md-4 ftco-animate">
             <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+p['MainPic'])}});">
+              <a href="#" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+p['MainPic'])}});">
               </a>
               <div class="text p-4">
                 <div class="meta mb-2">
                     <h3 class="heading"><a href="#">{{p['PigeonRing']}}</a></h3>
 
-                  <div><a href="#">{{p['PigeonName']}}</a></div><br>
-                  <div><a href="#">Breed by: {{p['BreedBy']}}</a></div><br>
-                  <div><a href="#">Offer by: {{p['OfferBy']}}</a></div><br>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> {{p['Price']}} {{auc['Currency']}}</a></div><br>
-                  <div><a href="#">Last bid by: {{p['LastbidderName']}}</a></div><br>
-                  <div><h4 class="heading">{{p['EndTime']}}</h4></div>
+                    <div><a href="#">{{p['PigeonName']}}</a></div><br>
+                    <div><a href="#">Breed by: {{p['BreedBy']}}</a></div><br>
+                    <div><a href="#">Offer by: {{p['OfferBy']}}</a></div><br>
+                    <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> {{p['Price']}} {{auc['Currency']}}</a></div><br>
+                    <div><a href="#">Last bid by: {{p['LastBidderName']}}</a></div><br>
+                    <div><p id="ends{{p['PigeonID']}}" style="color:crimson"></p></div>
                 </div>
               </div>
             </div>
@@ -118,22 +118,45 @@
 
         //let runningAuc = "{{runningAuc|length}}";
 
-        function EndingTimeDiff(endingTime) {
+        function EndingTimeDiffSingle(endingTime) {
 
             let DateTime = luxon.DateTime;
             let now = DateTime.local().setZone('Asia/Dhaka')
             let nowMilis = now. toMillis();
 
-            console.log(nowMilis);
-            /*let year    = now.year;
-            let month   = now.month;
-            let day     = now.day;
-            let hour    = now.hour;
-            let minute  = now.minute;
-            let second  = now.second;*/
+            //console.log(nowMilis);
 
-            //let y = endingTime.substring(0,3);
-            //console.log(y);
+            let auctionEndDateTime = new Date(endingTime);
+            let aucEndsMilis = auctionEndDateTime.getTime();
+            //console.log(aucEndsMilis);
+
+            endsIn = aucEndsMilis - nowMilis;
+
+            if(endsIn==0){
+                location.reload();
+            }
+
+            days = parseInt(endsIn/86400000);
+            hours = parseInt((endsIn%86400000)/3600000);
+            mins = parseInt((endsIn%3600000)/60000);
+            secs = parseInt((endsIn%60000)/1000);
+
+            let ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
+            //console.log(ends);
+            
+            document.getElementById("a_days").innerHTML = ""+days;            
+            document.getElementById("a_hours").innerHTML = ""+hours;            
+            document.getElementById("a_mins").innerHTML = ""+mins;            
+            document.getElementById("a_secs").innerHTML = ""+secs;
+        }
+        
+        function EndingPerPigeon(endingTime) {
+
+            let DateTime = luxon.DateTime;
+            let now = DateTime.local().setZone('Asia/Dhaka')
+            let nowMilis = now. toMillis();
+
+            //console.log(nowMilis);
 
             let auctionEndDateTime = new Date(endingTime);
             let aucEndsMilis = auctionEndDateTime.getTime();
@@ -150,29 +173,34 @@
             mins = parseInt((endsIn%3600000)/60000);
             secs = parseInt((endsIn%60000)/1000);
 
-            /*let Y = auctionEndDateTime.getFullYear();
-            let M = auctionEndDateTime.getMonth();
-            let D = auctionEndDateTime.getDate();
-            let H = auctionEndDateTime.getHours();
-            let S = auctionEndDateTime.getSeconds();
-            let ms = auctionEndDateTime.getMilliseconds();*/
-
             let ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
             //console.log(ends);
-            return ends;
+            return ends;            
+
         }
+        let running = '{{running}}';
+        let pigeons = {{pgs|safe}};
+        console.log(running);
 
-        let runningAuc = {{runningAuc|safe}};
-        console.log(runningAuc);
+        if(running == 'Running'){
+            setInterval(function(){
+                auc = {{auc|safe}};
+                EndingTimeDiffSingle(auc['AuctionEnd']);
 
-        setInterval(function(){
                 let i;
-                for(i=0; i<runningAuc.length; i++){
-                    endingTime = EndingTimeDiff(runningAuc[i]['AuctionEnd']);
-                    document.getElementById("ends"+runningAuc[i]['AuctionID']).innerHTML = endingTime;
+                for(i=0; i<pigeons.length; i++){
+                    endingTime = EndingPerPigeon(pigeons[i]['EndTime']);
+                    document.getElementById("ends"+pigeons[i]['PigeonID']).innerHTML = endingTime;
                 }
 
             }, 1000);
+        }else if(running == 'Upcoming'){
+            console.log('Auction Upcoming');
+        }else{
+            console.log('Auction Ended');
+        }
+        
+
 
 
 

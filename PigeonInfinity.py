@@ -444,10 +444,17 @@ def single_auction(auction_no):
                                '%Y-%m-%d %H:%M')
     aucMilliSecEnd = dt_obj.timestamp() * 1000
 
-    if (curMilliSec < aucMilliSecEnd):
-        running = True
+    dt_obj = datetime.strptime(auc['AuctionStart'],
+                               '%Y-%m-%d %H:%M')
+    aucMilliSecStart = dt_obj.timestamp() * 1000
+
+    if curMilliSec > aucMilliSecStart:
+        if (curMilliSec < aucMilliSecEnd):
+            running = 'Running'
+        else:
+            running = 'Ended'
     else:
-        running = False
+        running = 'Upcoming'
 
     return render_template('single_auction.html', auc=auc, pgs=pgs, running=running)
 
