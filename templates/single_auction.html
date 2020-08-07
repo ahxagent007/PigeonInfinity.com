@@ -89,17 +89,17 @@
           {% for p in pgs %}
           <div class="col-md-4 ftco-animate">
             <div class="blog-entry align-self-stretch">
-              <a href="#" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+p['MainPic'])}});">
+              <a href="Pigeon/{{p['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+p['MainPic'])}});">
               </a>
               <div class="text p-4">
                 <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">{{p['PigeonRing']}}</a></h3>
+                    <h3 class="heading"><a href="Pigeon/{{p['PigeonID']}}">{{p['PigeonRing']}}</a></h3>
 
-                    <div><a href="#">{{p['PigeonName']}}</a></div><br>
-                    <div><a href="#">Breed by: {{p['BreedBy']}}</a></div><br>
-                    <div><a href="#">Offer by: {{p['OfferBy']}}</a></div><br>
-                    <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> {{p['Price']}} {{auc['Currency']}}</a></div><br>
-                    <div><a href="#">Last bid by: {{p['LastBidderName']}}</a></div><br>
+                    <div><a href="Pigeon/{{p['PigeonID']}}">{{p['PigeonName']}}</a></div><br>
+                    <div><a href="Pigeon/{{p['PigeonID']}}">Breed by: {{p['BreedBy']}}</a></div><br>
+                    <div><a href="Pigeon/{{p['PigeonID']}}">Offer by: {{p['OfferBy']}}</a></div><br>
+                    <div><a href="Pigeon/{{p['PigeonID']}}" class="meta-chat"><span class="fa fa-gavel"></span> {{p['Price']}} {{auc['Currency']}}</a></div><br>
+                    <div><a href="Pigeon/{{p['PigeonID']}}">Last bid by: {{p['LastBidderName']}}</a></div><br>
                     <div><p id="ends{{p['PigeonID']}}" style="color:crimson"></p></div>
                 </div>
               </div>

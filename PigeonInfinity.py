@@ -288,6 +288,18 @@ class DatabaseByPyMySQL:
             return data, True
         else:
             return data, False
+
+    def getPigeonByID(self, id):
+        sql_qry = 'SELECT * FROM pigeon WHERE PigeonID = {0};'.format(id)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getPigeonsByAuctionID : ', str(data), flush=True)
+
+        if len(data) > 0:
+            return data[0], True
+        else:
+            return data, False
 ###############################################################
 
 @app.route('/')
@@ -474,9 +486,40 @@ def article():
 
 
 
-@app.route('/Pigeon/<pigeon>')
+@app.route('/Auction/Pigeon/<pigeon>')
 def pigeon(pigeon):
-    return render_template('pigeon.html', userData={})
+    DB = DatabaseByPyMySQL()
+    pg, sts = DB.getPigeonByID(pigeon)
+
+
+    curTime = time.strftime('%Y %m %d %H:%M:%S')
+
+    dt_obj = datetime.strptime(curTime,
+                               '%Y %m %d %H:%M:%S')
+    curMilliSec = dt_obj.timestamp() * 1000
+
+    dt_obj = datetime.strptime(pg['EndTime'],
+                               '%Y-%m-%d %H:%M')
+    pigeonMilliSecEnd = dt_obj.timestamp() * 1000
+
+    dt_obj = datetime.strptime(pg['StartTime'],
+                               '%Y-%m-%d %H:%M')
+    pigeonMilliSecStart = dt_obj.timestamp() * 1000
+
+    if curMilliSec > pigeonMilliSecStart:
+        if (curMilliSec < pigeonMilliSecEnd):
+            running = 'Running'
+        else:
+            running = 'Ended'
+    else:
+        running = 'Upcoming'
+
+    #x = u'[ "A","B","C" , " D"]'
+    x = pg['AllPic']
+    lst = x.strip('[]').replace("'", '').replace(' ', '').split(',')
+    pg['AllPic'] = lst
+
+    return render_template('pigeon.html', pigeon=pg, running=running)
 
 @app.route('/Privacy')
 def privacy():

@@ -21,41 +21,41 @@
     	<div class="container">
     		<div class="row d-flex no-gutters">
     			<div class="col-md-5 d-flex">
-    				<div class="img img-video d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url({{url_for('static', filename='images/about-1.jpg')}});">
+    				<div class="img img-video d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url({{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}});">
     				</div>
     			</div>
     			<div class="col-md-7 pl-md-5 py-md-5">
     				<div class="heading-section pt-md-5">
-	            <h2 class="mb-4">BAN 12-120545</h2>
-	            <h4 class="mb-4">Pigeon Name</h4>
+	            <h2 class="mb-4">{{pigeon['PigeonRing']}}</h2>
+	            <h4 class="mb-4">{{pigeon['PigeonName']}}</h4>
     				</div>
     				<div class="row">
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user"></span></div>
 	    					<div class="text pl-3">
 	    						<h4>Breed by</h4>
-	    						<p>Abir Hossain Xiam</p>
+	    						<p>{{pigeon['BreedBy']}}</p>
 	    					</div>
 	    				</div>
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user"></span></div>
 	    					<div class="text pl-3">
 	    						<h4>Offer by</h4>
-	    						<p>Abir Hossain Xian</p>
+	    						<p>{{pigeon['OfferBy']}}</p>
 	    					</div>
 	    				</div>
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-transgender"></span></div>
 	    					<div class="text pl-3">
 	    						<h4>Gender</h4>
-	    						<p>Male</p>
+	    						<p>{{pigeon['PigeonGender']}}</p>
 	    					</div>
 	    				</div>
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-paint-brush"></span></div>
 	    					<div class="text pl-3">
 	    						<h4>Color</h4>
-	    						<p>Black</p>
+	    						<p>{{pigeon['PigeonColor']}}</p>
 	    					</div>
 	    				</div>
 	    			</div>
@@ -71,15 +71,15 @@
                 <div class="col-md-7 d-flex align-self-stretch px-4 ftco-animate">
 
                     <div class="d-block services text-center">
-                <div class="icon d-flex align-items-center justify-content-center">
-                <span class="fa fa-info-circle"></span>
-                </div>
-                <div class="media-body p-4">
-                <h3 class="heading">Details</h3>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right.</p>
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <span class="fa fa-info-circle"></span>
+                        </div>
+                        <div class="media-body p-4">
+                            <h3 class="heading">Details</h3>
+                            <p>{{pigeon['PigeonDetails']}}</p>
 
-                </div>
-                </div>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -165,55 +165,15 @@
     <section class="ftco-section">
         <div class="container">
             <div class="row">
+                {% for pics in pigeon['AllPic'] %}
               <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='images/gallery-1.jpg')}});">
-                    <a href="{{url_for('static', filename='images/gallery-1.jpg')}}" class="icon image-popup d-flex justify-content-center align-items-center">
+                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/'+pics)}});">
+                    <a href="{{url_for('static', filename='UPLOADS/'+pics)}}" class="icon image-popup d-flex justify-content-center align-items-center">
                         <span class="fa fa-expand"></span>
                     </a>
                 </div>
               </div>
-              <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='images/gallery-2.jpg')}});">
-                    <a href="{{url_for('static', filename='images/gallery-2.jpg')}}" class="icon image-popup d-flex justify-content-center align-items-center">
-                        <span class="fa fa-expand"></span>
-                    </a>
-                </div>
-              </div>
-              <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='images/gallery-3.jpg')}});">
-                    <a href="{{url_for('static', filename='images/gallery-3.jpg')}}" class="icon image-popup d-flex justify-content-center align-items-center">
-                        <span class="fa fa-expand"></span>
-                    </a>
-                </div>
-              </div>
-              <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='images/gallery-4.jpg')}});">
-                    <a href="{{url_for('static', filename='images/gallery-4.jpg')}}" class="icon image-popup d-flex justify-content-center align-items-center">
-                        <span class="fa fa-expand"></span>
-                    </a>
-                </div>
-              </div>
-              <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='images/gallery-5.jpg')}});">
-                    <a href="{{url_for('static', filename='images/gallery-5.jpg')}}" class="icon image-popup d-flex justify-content-center align-items-center">
-                        <span class="fa fa-expand"></span>
-                    </a>
-                </div>
-              </div>
-              <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='images/gallery-6.jpg')}});">
-                    <a href="{{url_for('static', filename='images/gallery-6.jpg')}}" class="icon image-popup d-flex justify-content-center align-items-center">
-                        <span class="fa fa-expand"></span>
-                    </a>
-                </div>
-              </div>
-              <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='images/gallery-7.jpg')}});">
-                    <a href="{{url_for('static', filename='images/gallery-7.jpg')}}" class="icon image-popup d-flex justify-content-center align-items-center">
-                        <span class="fa fa-expand"></span>
-                    </a>
-                </div>
-              </div>
+                {% endfor %}
 
             </div>
         </div>
