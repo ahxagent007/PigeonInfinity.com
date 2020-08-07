@@ -165,14 +165,21 @@
     <section class="ftco-section">
         <div class="container">
             <div class="row">
+                <div class="col-md-4 ftco-animate">
+                    <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}});">
+                        <a href="{{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}}" class="icon image-popup d-flex justify-content-center align-items-center">
+                            <span class="fa fa-expand"></span>
+                        </a>
+                    </div>
+                  </div>
                 {% for pics in pigeon['AllPic'] %}
-              <div class="col-md-4 ftco-animate">
-                <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/'+pics)}});">
-                    <a href="{{url_for('static', filename='UPLOADS/'+pics)}}" class="icon image-popup d-flex justify-content-center align-items-center">
-                        <span class="fa fa-expand"></span>
-                    </a>
-                </div>
-              </div>
+                  <div class="col-md-4 ftco-animate">
+                    <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/'+pics)}});">
+                        <a href="{{url_for('static', filename='UPLOADS/'+pics)}}" class="icon image-popup d-flex justify-content-center align-items-center">
+                            <span class="fa fa-expand"></span>
+                        </a>
+                    </div>
+                  </div>
                 {% endfor %}
 
             </div>
@@ -183,136 +190,29 @@
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
           <div class="col-md-7 heading-section text-center ftco-animate">
-            <h2>Pigeons</h2>
+            <h2>All Pigeons</h2>
           </div>
         </div>
         <div class="row d-flex">
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='images/image_1.jpg')}});">
-              </a>
-              <div class="text p-4">
-                <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">BAN 12-56454</a></h3>
+            {% for all_pgs in auc_pgs %}
+                <div class="col-md-4 ftco-animate">
+                    <div class="blog-entry align-self-stretch">
+                      <a href="/{{all_pgs['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+all_pgs['MainPic'])}});">
+                      </a>
+                      <div class="text p-4">
+                        <div class="meta mb-2">
+                            <h3 class="heading"><a href="#">{{all_pgs['PigeonRing']}}</a></h3><br>
 
-                  <div><a href="#">Pigeon Name</a></div>
-                  <div><a href="#">Breed by: Abir Hossain Xian</a></div>
-                  <div><a href="#">Offer by: Abir Hossain Xian</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> 3000 BDT</a></div>
-                  <div><a href="#">Last bid by: Abir Hossain Xian</a></div>
-                  <div><h4 class="heading">3 Days, 12 hours, 45 mins, 2 secs</h4></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='images/image_1.jpg')}});">
-              </a>
-              <div class="text p-4">
-                <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">BAN 12-56454</a></h3>
-
-                  <div><a href="#">Pigeon Name</a></div>
-                  <div><a href="#">Breed by: Abir Hossain Xian</a></div>
-                  <div><a href="#">Offer by: Abir Hossain Xian</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> 3000 BDT</a></div>
-                  <div><a href="#">Last bid by: Abir Hossain Xian</a></div>
-                  <div><h4 class="heading">3 Days, 12 hours, 45 mins, 2 secs</h4></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='images/image_1.jpg')}});">
-              </a>
-              <div class="text p-4">
-                <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">BAN 12-56454</a></h3>
-
-                  <div><a href="#">Pigeon Name</a></div>
-                  <div><a href="#">Breed by: Abir Hossain Xian</a></div>
-                  <div><a href="#">Offer by: Abir Hossain Xian</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> 3000 BDT</a></div>
-                  <div><a href="#">Last bid by: Abir Hossain Xian</a></div>
-                  <div><h4 class="heading">3 Days, 12 hours, 45 mins, 2 secs</h4></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='images/image_1.jpg')}});">
-              </a>
-              <div class="text p-4">
-                <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">BAN 12-56454</a></h3>
-
-                  <div><a href="#">Pigeon Name</a></div>
-                  <div><a href="#">Breed by: Abir Hossain Xian</a></div>
-                  <div><a href="#">Offer by: Abir Hossain Xian</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> 3000 BDT</a></div>
-                  <div><a href="#">Last bid by: Abir Hossain Xian</a></div>
-                  <div><h4 class="heading">3 Days, 12 hours, 45 mins, 2 secs</h4></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='images/image_1.jpg')}});">
-              </a>
-              <div class="text p-4">
-                <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">BAN 12-56454</a></h3>
-
-                  <div><a href="#">Pigeon Name</a></div>
-                  <div><a href="#">Breed by: Abir Hossain Xian</a></div>
-                  <div><a href="#">Offer by: Abir Hossain Xian</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> 3000 BDT</a></div>
-                  <div><a href="#">Last bid by: Abir Hossain Xian</a></div>
-                  <div><h4 class="heading">3 Days, 12 hours, 45 mins, 2 secs</h4></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='images/image_1.jpg')}});">
-              </a>
-              <div class="text p-4">
-                <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">BAN 12-56454</a></h3>
-
-                  <div><a href="#">Pigeon Name</a></div>
-                  <div><a href="#">Breed by: Abir Hossain Xian</a></div>
-                  <div><a href="#">Offer by: Abir Hossain Xian</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> 3000 BDT</a></div>
-                  <div><a href="#">Last bid by: Abir Hossain Xian</a></div>
-                  <div><h4 class="heading">3 Days, 12 hours, 45 mins, 2 secs</h4></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20 rounded" style="background-image: url({{url_for('static', filename='images/image_1.jpg')}});">
-              </a>
-              <div class="text p-4">
-                <div class="meta mb-2">
-                    <h3 class="heading"><a href="#">BAN 12-56454</a></h3>
-
-                  <div><a href="#">Pigeon Name</a></div>
-                  <div><a href="#">Breed by: Abir Hossain Xian</a></div>
-                  <div><a href="#">Offer by: Abir Hossain Xian</a></div>
-                  <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> 3000 BDT</a></div>
-                  <div><a href="#">Last bid by: Abir Hossain Xian</a></div>
-                  <div><h4 class="heading">3 Days, 12 hours, 45 mins, 2 secs</h4></div>
-                </div>
-              </div>
-            </div>
-          </div>
+                            <div><a href="#">{{all_pgs['PigeonName']}}</a></div><br>
+                            <div><a href="#">Breed by: {{all_pgs['BreedBy']}}</a></div><br>
+                            <div><a href="#">Offer by: {{all_pgs['OfferBy']}}</a></div><br>
+                            <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> {{all_pgs['Price']}}</a></div><br>
+                            <div><a href="#">Last bid by: {{all_pgs['LastBidderName']}}</a></div><br>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor %}
         </div>
       </div>
     </section>

@@ -490,6 +490,7 @@ def article():
 def pigeon(pigeon):
     DB = DatabaseByPyMySQL()
     pg, sts = DB.getPigeonByID(pigeon)
+    auc_pgs, sts = DB.getPigeonsByAuctionID(pg['AuctionID'])
 
 
     curTime = time.strftime('%Y %m %d %H:%M:%S')
@@ -519,7 +520,7 @@ def pigeon(pigeon):
     lst = x.strip('[]').replace("'", '').replace(' ', '').split(',')
     pg['AllPic'] = lst
 
-    return render_template('pigeon.html', pigeon=pg, running=running)
+    return render_template('pigeon.html', pigeon=pg, running=running, auc_pgs=auc_pgs)
 
 @app.route('/Privacy')
 def privacy():
