@@ -85,52 +85,27 @@
 
                 <div class="col-md-5 ftco-animate">
                     <div class="card" style="font-size: 10px; overflow: auto; max-height: 400px; min-height: 400px;">
-                        <h6 class="card-header">Latest Bid on BAN 16-597664</h6>
+                        <h6 class="card-header">Latest Bid on {{pigeon['PigeonRing']}} ({{pigeon['PigeonName']}})</h6>
                         <div class="card-body">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th scope="col">Time</th>
                                         <th scope="col">User</th>
+                                        <th scope="col">Pigeon</th>
                                         <th scope="col">Amount</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>12:55:41 30/12/2020</td>
-                                        <td>Noman Ali Khan</td>
-                                        <td>6500 BDT</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12:55:41 30/12/2020</td>
-                                        <td>Noman Ali Khan</td>
-                                        <td>6500 BDT</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12:55:41 30/12/2020</td>
-                                        <td>Noman Ali Khan</td>
-                                        <td>6500 BDT</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12:55:41 30/12/2020</td>
-                                        <td>Noman Ali Khan</td>
-                                        <td>6500 BDT</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12:55:41 30/12/2020</td>
-                                        <td>Noman Ali Khan</td>
-                                        <td>6500 BDT</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12:55:41 30/12/2020</td>
-                                        <td>Noman Ali Khan</td>
-                                        <td>6500 BDT</td>
-                                    </tr>
+                                <tbody id="table_bids">
+                                    
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+
+                {% if running == 'Running' %}
 
                 <div class="col-md-2 col-lg-2"></div>
                 <div class="col-md-8 col-lg-8 p-3 py-5 pl-lg-12 ftco-animate">
@@ -140,8 +115,25 @@
                         <div class="row">
 
                             <div class="col-md-12">
+                                {% if pigeon['LastBidderName'] == '---' %}
+                                <p id="last_bidder"></p>
+                                {% endif %}
+                            </div>
+
+                            {% if pigeon['Price'] < 10000 %}
+                                {% set bidChange = 500 %}
+                            {% elif pigeon['Price'] >= 10000 and pigeon['Price'] < 20000 %}
+                                {% set bidChange = 1000 %}
+                            {% elif pigeon['Price'] >= 20000 and pigeon['Price'] < 50000 %}
+                                {% set bidChange = 2000 %}
+                            {% elif pigeon['Price'] >= 50000 %}
+                                {% set bidChange = 5000 %}
+                            {% endif %}
+
+
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" required>
+                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" value="{{pigeon['Price']+bidChange}}" required>
                                 </div>
                             </div>
 
@@ -157,6 +149,8 @@
                     </form>
                 </div>
                 <div class="col-md-2 col-lg-2"></div>
+
+                {% endif %}
 
             </div>
     	</div>
@@ -197,17 +191,17 @@
             {% for all_pgs in auc_pgs %}
                 <div class="col-md-4 ftco-animate">
                     <div class="blog-entry align-self-stretch">
-                      <a href="/{{all_pgs['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+all_pgs['MainPic'])}});">
+                      <a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+all_pgs['MainPic'])}});">
                       </a>
                       <div class="text p-4">
                         <div class="meta mb-2">
                             <h3 class="heading"><a href="#">{{all_pgs['PigeonRing']}}</a></h3><br>
 
-                            <div><a href="#">{{all_pgs['PigeonName']}}</a></div><br>
-                            <div><a href="#">Breed by: {{all_pgs['BreedBy']}}</a></div><br>
-                            <div><a href="#">Offer by: {{all_pgs['OfferBy']}}</a></div><br>
-                            <div><a href="#" class="meta-chat"><span class="fa fa-gavel"></span> {{all_pgs['Price']}}</a></div><br>
-                            <div><a href="#">Last bid by: {{all_pgs['LastBidderName']}}</a></div><br>
+                            <div><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}">{{all_pgs['PigeonName']}}</a></div><br>
+                            <div><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}">Breed by: {{all_pgs['BreedBy']}}</a></div><br>
+                            <div><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}">Offer by: {{all_pgs['OfferBy']}}</a></div><br>
+                            <div><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}" class="meta-chat"><span class="fa fa-gavel"></span> {{all_pgs['Price']}}</a></div><br>
+                            <div><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}">Last bid by: {{all_pgs['LastBidderName']}}</a></div><br>
                         </div>
                       </div>
                     </div>
@@ -216,4 +210,47 @@
         </div>
       </div>
     </section>
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript">
+
+        function updatePigeon(pigeonID){
+            $.ajax({
+                method:"post",
+                url:"{{url_for('Bid')}}",
+                data: {pigeonID: pigeonID},
+                success:function(result){
+
+                    //console.log(result);
+
+                    document.getElementById('table_bids').innerHTML = '';
+
+                    let tbl = '';
+
+                    result.forEach((item) => {
+                        tbl += '<tr>'+
+                                    '<td>'+item.BidTimeDate+'</td>'+
+                                    '<td>'+item.name+'</td>'+
+                                    '<td>'+item.PigeonRing+'('+item.PigeonName+') </td>'+
+                                    '<td>'+item.BidAmount+'</td>'+
+                                '</tr>';
+
+                    });
+                    
+                    document.getElementById('table_bids').innerHTML = tbl;
+                    
+                    document.getElementById('last_bidder').innerHTML = 'lastst Bid by '+result[0].name+' amount '+result[0].BidAmount;
+                }
+            });
+        }
+
+        setInterval(function(){
+            
+            updatePigeon("{{pigeon['PigeonID']}}");
+            
+        }, 1000);
+
+
+    </script>
 {% endblock %}

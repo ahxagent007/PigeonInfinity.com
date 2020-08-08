@@ -300,6 +300,22 @@ class DatabaseByPyMySQL:
             return data[0], True
         else:
             return data, False
+
+    def getBids(self, id):
+        sql_qry = 'SELECT user.name, user.user_id, bid.BidAmount, bid.BidTimeDate, pigeon.PigeonName, pigeon.PigeonRing, pigeon.AuctionID FROM bid ' \
+                    'JOIN user ON bid.UserID = user.user_id '\
+                    'JOIN pigeon ON pigeon.PigeonID = bid.PigeonID '\
+                    'WHERE bid.PigeonID = {0} ' \
+                    'ORDER BY bid.BidID DESC;'.format(id)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getBids : ', str(data), flush=True)
+
+        if len(data) > 0:
+            return data, True
+        else:
+            return data, False
 ###############################################################
 
 @app.route('/')
@@ -470,22 +486,6 @@ def single_auction(auction_no):
 
     return render_template('single_auction.html', auc=auc, pgs=pgs, running=running)
 
-@app.route("/getTime", methods=['GET'])
-def getTime():
-    print("browser time: ", request.args.get("time"))
-    print("server time : ", time.strftime('%A %B, %d %Y %H:%M:%S'))
-    return "Done"
-
-@app.route('/Profile')
-def profile():
-    return render_template('profile.html', userData={})
-
-@app.route('/Articles')
-def article():
-    return render_template('article.html', userData={})
-
-
-
 @app.route('/Auction/Pigeon/<pigeon>')
 def pigeon(pigeon):
     DB = DatabaseByPyMySQL()
@@ -521,6 +521,33 @@ def pigeon(pigeon):
     pg['AllPic'] = lst
 
     return render_template('pigeon.html', pigeon=pg, running=running, auc_pgs=auc_pgs)
+
+@app.route('/Auction/Pigeon/Bid', methods=['POST'])
+def Bid():
+    pigeonID = request.form.get('pigeonID')
+
+    DB = DatabaseByPyMySQL()
+    bids, sts = DB.getBids(pigeonID)
+
+    return jsonify(bids)
+
+@app.route("/getTime", methods=['GET'])
+def getTime():
+    print("browser time: ", request.args.get("time"))
+    print("server time : ", time.strftime('%A %B, %d %Y %H:%M:%S'))
+    return "Done"
+
+@app.route('/Profile')
+def profile():
+    return render_template('profile.html', userData={})
+
+@app.route('/Articles')
+def article():
+    return render_template('article.html', userData={})
+
+
+
+
 
 @app.route('/Privacy')
 def privacy():
