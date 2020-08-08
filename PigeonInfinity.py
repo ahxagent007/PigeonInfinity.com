@@ -188,7 +188,7 @@ class DatabaseByPyMySQL:
             return True
 
         except:
-            print('Error on addAnimal()', flush=True)
+            print('Error on addAuctionEvent()', flush=True)
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
@@ -316,6 +316,40 @@ class DatabaseByPyMySQL:
             return data, True
         else:
             return data, False
+
+    def getLastBid(self, id):
+        sql_qry = 'SELECT * FROM bid WHERE PigeonID = {0} ORDER BY BidID DESC;'.format(id)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getPigeonsByAuctionID : ', str(data), flush=True)
+
+        if len(data) > 0:
+            return data[0], True
+        else:
+            return data, False
+    def placeBid(self, pigeonID, userID, auctionID, amount, curTime, name):
+        try:
+            # Adding
+            sql = 'INSERT INTO bid(UserID, PigeonID, AuctionID, BidAmount, BidTimeDate)' \
+                   ' VALUES({0},{1},{2},{3},"{4}");'.format(userID, pigeonID, auctionID, amount, curTime)
+            print(sql, flush=True)
+            self.cursor.execute(sql)
+            self.conection.commit()
+
+            sql2 = 'UPDATE pigeon ' \
+                   'SET Price = {0}, LastBidderID = {1}, LastBidderName = "{2}" ' \
+                   'WHERE PigeonID = {3}'.format(amount, userID, name, pigeonID)
+            print(sql2, flush=True)
+            self.cursor.execute(sql2)
+            self.conection.commit()
+            return True
+
+        except:
+            print('Error on placeBid()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
+
 ###############################################################
 
 @app.route('/')
@@ -522,14 +556,63 @@ def pigeon(pigeon):
 
     return render_template('pigeon.html', pigeon=pg, running=running, auc_pgs=auc_pgs)
 
-@app.route('/Auction/Pigeon/Bid', methods=['POST'])
-def Bid():
+@app.route('/Auction/Pigeon/Bids', methods=['POST'])
+def getBid():
     pigeonID = request.form.get('pigeonID')
 
     DB = DatabaseByPyMySQL()
     bids, sts = DB.getBids(pigeonID)
 
     return jsonify(bids)
+
+@app.route('/Auction/Pigeon/Bid', methods=['POST'])
+def Bid():
+    pigeonID = request.form.get('pigeonID')
+    amount = request.form.get('amount')
+    userID = request.form.get('userID')
+    auctionID = request.form.get('auctionID')
+    name = request.form.get('userName')
+
+    DB = DatabaseByPyMySQL()
+
+    auc, stsa = DB.getAuctionByID(auctionID)
+
+    curTime = time.strftime('%d-%m-%Y %H:%M:%S')
+    dt_obj = datetime.strptime(curTime,
+                               '%d-%m-%Y %H:%M:%S')
+    curMilliSec = dt_obj.timestamp() * 1000
+
+    aucTime_obj = datetime.strptime(auc['AuctionEnd'],
+                                    '%Y-%m-%d %H:%M')
+    aucMilliSec = aucTime_obj.timestamp() * 1000
+
+    if curMilliSec < aucMilliSec:
+        bid, sts = DB.getLastBid(pigeonID)
+        if sts:
+            if int(amount)>bid['BidAmount']:
+
+                bidTime_obj = datetime.strptime(bid['BidTimeDate'],
+                                           '%d-%m-%Y %H:%M:%S')
+                bidMilliSec = bidTime_obj.timestamp() * 1000
+
+                if curMilliSec>bidMilliSec:
+                    DB.placeBid(pigeonID, userID, auctionID, amount, curTime, name)
+                    status = 'Your bid placed successfully!'
+                else:
+                    status = 'Sorry, Another bid already placed!'
+            else:
+                status = 'Amount is lower then last bid'
+
+        else:
+            DB.placeBid(pigeonID, userID, auctionID, amount, curTime, name)
+            status = 'Your bid placed successfully!'
+    else:
+        status = 'Sorry, Auction Ended'
+
+    print(status)
+    data = {'status':status}
+
+    return jsonify(data)
 
 @app.route("/getTime", methods=['GET'])
 def getTime():

@@ -111,13 +111,11 @@
                 <div class="col-md-8 col-lg-8 p-3 py-5 pl-lg-12 ftco-animate">
                     <h2 class="mb-4">Bid Now</h2>
 
-                    <form action="#" class="appointment"  method="post">
+                    <div class="appointment"  method="post">
                         <div class="row">
 
                             <div class="col-md-12">
-                                {% if pigeon['LastBidderName'] == '---' %}
                                 <p id="last_bidder"></p>
-                                {% endif %}
                             </div>
 
                             {% if pigeon['Price'] < 10000 %}
@@ -133,20 +131,20 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" value="{{pigeon['Price']+bidChange}}" required>
+                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" id="bid_amount" value="{{pigeon['Price']+bidChange}}" required>
                                 </div>
                             </div>
 
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input type="submit" value="Bid" class="btn btn-success py-3 px-4">
+                                    <button class="btn btn-success py-3 px-4" onclick="Bid()">Bid</button>
                                 </div>
                             </div>
 
 
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <div class="col-md-2 col-lg-2"></div>
 
@@ -218,7 +216,7 @@
         function updatePigeon(pigeonID){
             $.ajax({
                 method:"post",
-                url:"{{url_for('Bid')}}",
+                url:"{{url_for('getBid')}}",
                 data: {pigeonID: pigeonID},
                 success:function(result){
 
@@ -240,9 +238,51 @@
                     
                     document.getElementById('table_bids').innerHTML = tbl;
                     
-                    document.getElementById('last_bidder').innerHTML = 'lastst Bid by '+result[0].name+' amount '+result[0].BidAmount;
+                    document.getElementById('last_bidder').innerHTML = 'latest Bid by '+result[0].name+' amount '+result[0].BidAmount;
                 }
             });
+        }
+
+        function Bid(){
+                        
+            let amount = document.getElementById("bid_amount").value;
+            let pigeonID = {{pigeon['PigeonID']}};
+            //let userID = {{session['UserID']}};
+            //let userName = {{session['UserName']}};
+            let auctionID = {{pigeon['AuctionID']}};
+            let userID = 1;
+            let userName = 'Xian';
+            //alert(pigeonID+" "+userID+" "+amount+" "+auctionID);
+
+            let pigeonPrice = {{pigeon['Price']|safe}};
+            let bidChange = 0;
+        
+            if(pigeonPrice<10000){
+                bidChange = 500;
+            }else if(pigeonPrice>=10000 && pigeonPrice<20000){                     
+                bidChange = 1000;
+            }else if(pigeonPrice>=20000 && pigeonPrice<50000){                     
+                bidChange = 2000;
+            }else if(pigeonPrice>=50000){                     
+                bidChange = 5000;
+            }
+
+            if(amount >= pigeonPrice+bidChange){
+                $.ajax({
+                    method:"post",
+                    url:"{{url_for('Bid')}}",
+                    data: {pigeonID: pigeonID, amount: amount, userID: userID, auctionID: auctionID, userName: userName},
+                    success:function(result){
+                        console.log(result);
+                        alert(result['status']);
+
+                    }
+                });
+            }else{
+                alert('Bid difference should be more then '+bidChange);
+            }
+            
+
         }
 
         setInterval(function(){
