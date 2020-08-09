@@ -155,8 +155,21 @@
             let S = auctionEndDateTime.getSeconds();
             let ms = auctionEndDateTime.getMilliseconds();*/            
 
-            let ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
-            //console.log(ends);
+            let ends = '';
+                if(days == 0){
+                    ends = hours+' hours '+mins+' minutes '+secs+' seconds';
+                    
+                    if(hours == 0){
+                        ends = mins+' minutes '+secs+' seconds';
+                        
+                        if(mins == 0){
+                            ends = secs+' seconds';
+                        }
+                    }
+                }else{
+                    ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
+                }
+
             return ends;
         }
         

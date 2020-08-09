@@ -302,7 +302,7 @@ class DatabaseByPyMySQL:
             return data, False
 
     def getBids(self, id):
-        sql_qry = 'SELECT user.name, user.user_id, bid.BidAmount, bid.BidTimeDate, pigeon.PigeonName, pigeon.PigeonRing, pigeon.AuctionID FROM bid ' \
+        sql_qry = 'SELECT user.name, user.user_id, bid.BidAmount, bid.BidTimeDate, pigeon.PigeonName, pigeon.PigeonRing, pigeon.AuctionID, pigeon.EndTime FROM bid ' \
                     'JOIN user ON bid.UserID = user.user_id '\
                     'JOIN pigeon ON pigeon.PigeonID = bid.PigeonID '\
                     'WHERE bid.PigeonID = {0} ' \
@@ -328,11 +328,11 @@ class DatabaseByPyMySQL:
             return data[0], True
         else:
             return data, False
-    def placeBid(self, pigeonID, userID, auctionID, amount, curTime, name):
+    def placeBid(self, pigeonID, userID, auctionID, amount, bidTime, name):
         try:
             # Adding
             sql = 'INSERT INTO bid(UserID, PigeonID, AuctionID, BidAmount, BidTimeDate)' \
-                   ' VALUES({0},{1},{2},{3},"{4}");'.format(userID, pigeonID, auctionID, amount, curTime)
+                   ' VALUES({0},{1},{2},{3},"{4}");'.format(userID, pigeonID, auctionID, amount, bidTime)
             print(sql, flush=True)
             self.cursor.execute(sql)
             self.conection.commit()
@@ -347,6 +347,29 @@ class DatabaseByPyMySQL:
 
         except:
             print('Error on placeBid()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
+
+    def updatePigeonTime(self, pigeonID, auc_ID, Time):
+        try:
+            # Adding
+            sql = 'UPDATE pigeon ' \
+                   'SET EndTime = "{0}" ' \
+                   'WHERE PigeonID = {1}'.format(Time, pigeonID)
+            print(sql, flush=True)
+            self.cursor.execute(sql)
+            self.conection.commit()
+
+            sql2 = 'UPDATE auctionEvent ' \
+                   'SET AuctionEnd = "{0}" ' \
+                   'WHERE AuctionID = {1}'.format(Time, auc_ID)
+            print(sql2, flush=True)
+            self.cursor.execute(sql2)
+            self.conection.commit()
+            return True
+
+        except:
+            print('Error on updatePigeonTime()', flush=True)
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
@@ -575,14 +598,14 @@ def Bid():
 
     DB = DatabaseByPyMySQL()
 
-    auc, stsa = DB.getAuctionByID(auctionID)
+    pign, stsa = DB.getPigeonByID(pigeonID)
 
     curTime = time.strftime('%d-%m-%Y %H:%M:%S')
     dt_obj = datetime.strptime(curTime,
                                '%d-%m-%Y %H:%M:%S')
     curMilliSec = dt_obj.timestamp() * 1000
 
-    aucTime_obj = datetime.strptime(auc['AuctionEnd'],
+    aucTime_obj = datetime.strptime(pign['EndTime'],
                                     '%Y-%m-%d %H:%M')
     aucMilliSec = aucTime_obj.timestamp() * 1000
 
@@ -596,16 +619,41 @@ def Bid():
                 bidMilliSec = bidTime_obj.timestamp() * 1000
 
                 if curMilliSec>bidMilliSec:
-                    DB.placeBid(pigeonID, userID, auctionID, amount, curTime, name)
-                    status = 'Your bid placed successfully!'
+                    bid_status = DB.placeBid(pigeonID, userID, auctionID, amount, curTime, name)
+                    if bid_status:
+
+                        if (aucMilliSec-curMilliSec) < 600000:
+                            s = (aucMilliSec + 900000) / 1000.0
+                            updatedDate = datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M')
+                            print('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
+                            DB.updatePigeonTime(pigeonID, auctionID, updatedDate)
+
+                            status = 'Your bid placed successfully! Time Increased!'
+                        else:
+                            status = 'Your bid placed successfully!'
+                    else:
+                        status = 'Error!'
                 else:
                     status = 'Sorry, Another bid already placed!'
             else:
                 status = 'Amount is lower then last bid'
 
         else:
-            DB.placeBid(pigeonID, userID, auctionID, amount, curTime, name)
-            status = 'Your bid placed successfully!'
+            bid_status = DB.placeBid(pigeonID, userID, auctionID, amount, curTime, name)
+            if bid_status:
+
+                if (aucMilliSec - curMilliSec) < 600000:
+
+                    s = (aucMilliSec + 900000) / 1000.0
+                    updatedDate = datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M')
+                    print('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
+
+                    DB.updatePigeonTime(pigeonID, auctionID, updatedDate)
+                    status = 'Your bid placed successfully! Time Increased!'
+                else:
+                    status = 'Your bid placed successfully!'
+            else:
+                status = 'Error!'
     else:
         status = 'Sorry, Auction Ended'
 

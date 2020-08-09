@@ -166,16 +166,37 @@
 
             if(endsIn==0){
                 location.reload();
+            }if(endsIn<0){
+                let ends = 'Auction Ended !!';
+                //console.log(ends);
+                return ends;  
+            }else{
+                days = parseInt(endsIn/86400000);
+                hours = parseInt((endsIn%86400000)/3600000);
+                mins = parseInt((endsIn%3600000)/60000);
+                secs = parseInt((endsIn%60000)/1000);
+                
+                let ends = '';
+                if(days == 0){
+                    ends = hours+' hours '+mins+' minutes '+secs+' seconds';
+                    
+                    if(hours == 0){
+                        ends = mins+' minutes '+secs+' seconds';
+                        
+                        if(mins == 0){
+                            ends = secs+' seconds';
+                        }
+                    }
+                }else{
+                    ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
+                }
+
+               
+                //console.log(ends);
+                return ends;  
             }
 
-            days = parseInt(endsIn/86400000);
-            hours = parseInt((endsIn%86400000)/3600000);
-            mins = parseInt((endsIn%3600000)/60000);
-            secs = parseInt((endsIn%60000)/1000);
-
-            let ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
-            //console.log(ends);
-            return ends;            
+                      
 
         }
         let running = '{{running}}';

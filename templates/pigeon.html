@@ -64,6 +64,55 @@
     	</div>
     </section>
 
+    {% if running == 'Running'%}
+    <section class="ftco-counter" id="section-counter">
+    	<div class="container">
+				<div class="row">
+          <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" id="a_days"></strong>
+              </div>
+              <div class="text">
+              	<span>Days</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" id="a_hours"></strong>
+              </div>
+              <div class="text">
+              	<span>Hours</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" id="a_mins"></strong>
+              </div>
+              <div class="text">
+              	<span>Minutes</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" id="a_secs"></strong>
+              </div>
+              <div class="text">
+              	<span>Seconds</span>
+              </div>
+            </div>
+          </div>
+        </div>
+    	</div>
+    </section>
+    {% endif %}
+
     <section class="ftco-section bg-light ">
     	<div class="container">
     		<div class="row">
@@ -85,7 +134,13 @@
 
                 <div class="col-md-5 ftco-animate">
                     <div class="card" style="font-size: 10px; overflow: auto; max-height: 400px; min-height: 400px;">
+                        {% if running == 'Running' %}
                         <h6 class="card-header">Latest Bid on {{pigeon['PigeonRing']}} ({{pigeon['PigeonName']}})</h6>
+                        {% elif running == 'Upcoming' %}
+                        <h6 class="card-header" style="color:#1f00cc;">Auction hasn't started</h6>
+                        {% elif running == 'Ended' %}
+                        <h6 class="card-header" style="color:#cc0000;">Auction Ended</h6>
+                        {% endif %}
                         <div class="card-body">
                             <table class="table table-hover">
                                 <thead>
@@ -114,10 +169,6 @@
                     <div class="appointment"  method="post">
                         <div class="row">
 
-                            <div class="col-md-12">
-                                <p id="last_bidder"></p>
-                            </div>
-
                             {% if pigeon['Price'] < 10000 %}
                                 {% set bidChange = 500 %}
                             {% elif pigeon['Price'] >= 10000 and pigeon['Price'] < 20000 %}
@@ -130,8 +181,13 @@
 
 
                             <div class="col-md-12">
+                                <p id="last_bidder">{% if pigeon['LastBidderName'] == '---' %}You are the first bidder, starting bid {{pigeon['Price']+bidChange}}{% endif %}</p>
+                            </div>
+
+
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" id="bid_amount" required> <!--- value="{{pigeon['Price']+bidChange}}" --->
+                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" id="bid_amount" value="{{pigeon['Price']+bidChange}}" required> <!--- value="{{pigeon['Price']+bidChange}}" --->
                                 </div>
                             </div>
 
@@ -178,6 +234,8 @@
         </div>
     </section>
 
+
+
     <section class="ftco-section bg-light">
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
@@ -193,7 +251,7 @@
                       </a>
                       <div class="text p-4">
                         <div class="meta mb-2">
-                            <h3 class="heading"><a href="#">{{all_pgs['PigeonRing']}}</a></h3><br>
+                            <h3 class="heading"><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}">{{all_pgs['PigeonRing']}}</a></h3><br>
 
                             <div><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}">{{all_pgs['PigeonName']}}</a></div><br>
                             <div><a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}">Breed by: {{all_pgs['BreedBy']}}</a></div><br>
@@ -213,7 +271,8 @@
 {% block custom_js %}
     <script type="text/javascript">
         
-        let pigeonPrice = 0;
+        let pigeonPrice = {{pigeon['Price']|safe}};
+        let pigeonEndTime = "{{pigeon['EndTime']|safe}}";
 
         function updatePigeon(pigeonID){
             $.ajax({
@@ -223,26 +282,31 @@
                 success:function(result){
 
                     //console.log(result);
-
-                    document.getElementById('table_bids').innerHTML = '';
-
-                    let tbl = '';
-
-                    result.forEach((item) => {
-                        tbl += '<tr>'+
-                                    '<td>'+item.BidTimeDate+'</td>'+
-                                    '<td>'+item.name+'</td>'+
-                                    '<td>'+item.PigeonRing+'('+item.PigeonName+') </td>'+
-                                    '<td>'+item.BidAmount+'</td>'+
-                                '</tr>';
-
-                    });
                     
-                    document.getElementById('table_bids').innerHTML = tbl;
+                    if(result.length >0){
+                        document.getElementById('table_bids').innerHTML = '';
+
+                        let tbl = '';
+
+                        result.forEach((item) => {
+                            tbl += '<tr>'+
+                                        '<td>'+item.BidTimeDate+'</td>'+
+                                        '<td>'+item.name+'</td>'+
+                                        '<td>'+item.PigeonRing+'('+item.PigeonName+') </td>'+
+                                        '<td>'+item.BidAmount+'</td>'+
+                                    '</tr>';
+
+                        });
+
+                        document.getElementById('table_bids').innerHTML = tbl;
+
+                        document.getElementById('last_bidder').innerHTML = 'Latest Bid by '+result[0].name+' amount '+result[0].BidAmount;
+                        pigeonPrice = result[0].BidAmount;
+                        pigeonEndTime = result[0].EndTime;
+                        //console.log('Pigeon Price: '+pigeonPrice);
+                    }
+
                     
-                    document.getElementById('last_bidder').innerHTML = 'latest Bid by '+result[0].name+' amount '+result[0].BidAmount;
-                    pigeonPrice = result[0].BidAmount;
-                    console.log('Pigeon Price: '+pigeonPrice);
                 }
             });
         }
@@ -272,8 +336,9 @@
             }else if(pigeonPrice>=50000){                     
                 bidChange = 5000;
             }
-            alert(pigeonID+" "+userID+" "+amount+" "+auctionID+" "+pigeonPrice+" "+bidChange );
-            if(amount >= pigeonPrice+bidChange){
+            //alert(pigeonID+" "+userID+" "+amount+" "+auctionID+" "+pigeonPrice+" "+bidChange );
+            if(amount >= (pigeonPrice+bidChange) && (amount-pigeonPrice) <=10000){
+
                 $.ajax({
                     method:"post",
                     url:"{{url_for('Bid')}}",
@@ -285,17 +350,54 @@
                     }
                 });
             }else{
-                alert('Bid difference should be more then '+bidChange);
+                alert('Bid difference should be more then '+bidChange+' and less then 10,000');
             }
             
 
         }
+        
+        function EndingTimeDiffSingle(endingTime) {
 
-        setInterval(function(){
+            let DateTime = luxon.DateTime;
+            let now = DateTime.local().setZone('Asia/Dhaka')
+            let nowMilis = now. toMillis();
+
+            //console.log(nowMilis);
+
+            let auctionEndDateTime = new Date(endingTime);
+            let aucEndsMilis = auctionEndDateTime.getTime();
+            //console.log(aucEndsMilis);
+
+            endsIn = aucEndsMilis - nowMilis;
+
+            if(endsIn==0){
+                location.reload();
+            }
+
+            days = parseInt(endsIn/86400000);
+            hours = parseInt((endsIn%86400000)/3600000);
+            mins = parseInt((endsIn%3600000)/60000);
+            secs = parseInt((endsIn%60000)/1000);
+
+            let ends = days+' days '+hours+' hours '+mins+' minutes '+secs+' seconds';
+            //console.log(ends);
             
-            updatePigeon("{{pigeon['PigeonID']}}");
-            
-        }, 1000);
+            document.getElementById("a_days").innerHTML = ""+days;            
+            document.getElementById("a_hours").innerHTML = ""+hours;            
+            document.getElementById("a_mins").innerHTML = ""+mins;            
+            document.getElementById("a_secs").innerHTML = ""+secs;
+        }
+        
+        let running = "{{running|safe}}";
+        
+        if(running == 'Running'){
+            setInterval(function(){
+                updatePigeon({{pigeon['PigeonID']}});
+                EndingTimeDiffSingle(pigeonEndTime);
+            }, 1000);
+        }
+
+        
 
 
     </script>
