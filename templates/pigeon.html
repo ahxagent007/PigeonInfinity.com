@@ -131,7 +131,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" id="bid_amount" value="{{pigeon['Price']+bidChange}}" required>
+                                  <input type="number" class="form-control" placeholder="Bid Amount" name="bid_amount" id="bid_amount" required> <!--- value="{{pigeon['Price']+bidChange}}" --->
                                 </div>
                             </div>
 
@@ -212,6 +212,8 @@
 
 {% block custom_js %}
     <script type="text/javascript">
+        
+        let pigeonPrice = 0;
 
         function updatePigeon(pigeonID){
             $.ajax({
@@ -239,22 +241,26 @@
                     document.getElementById('table_bids').innerHTML = tbl;
                     
                     document.getElementById('last_bidder').innerHTML = 'latest Bid by '+result[0].name+' amount '+result[0].BidAmount;
+                    pigeonPrice = result[0].BidAmount;
+                    console.log('Pigeon Price: '+pigeonPrice);
                 }
             });
         }
 
         function Bid(){
-                        
+            
+            let userID = "{{session['user_id']}}";
+            if (userID == ""){
+                window.location.replace("{{url_for('login')}}");
+            }
+
             let amount = document.getElementById("bid_amount").value;
             let pigeonID = {{pigeon['PigeonID']}};
-            //let userID = {{session['UserID']}};
-            //let userName = {{session['UserName']}};
+            let userName = "{{session['name']}}";
             let auctionID = {{pigeon['AuctionID']}};
-            let userID = 1;
-            let userName = 'Xian';
-            //alert(pigeonID+" "+userID+" "+amount+" "+auctionID);
-
-            let pigeonPrice = {{pigeon['Price']|safe}};
+            //let userID = 1;
+            //let userName = 'Xian';
+            
             let bidChange = 0;
         
             if(pigeonPrice<10000){
@@ -266,7 +272,7 @@
             }else if(pigeonPrice>=50000){                     
                 bidChange = 5000;
             }
-
+            alert(pigeonID+" "+userID+" "+amount+" "+auctionID+" "+pigeonPrice+" "+bidChange );
             if(amount >= pigeonPrice+bidChange){
                 $.ajax({
                     method:"post",
