@@ -98,7 +98,7 @@ class DatabaseByPyMySQL:
             # current date and time
             now = datetime.now()
 
-            addedDate = str(now.strftime("%d-%m-%Y"))
+            addedDate = str(now.strftime("%d-%m-%Y %H:%M:%S"))
 
             # Adding
             sql1 = 'INSERT INTO animal(AnimalID, AnimalTag, AnimalCategory, AnimalBreed, AnimalSex, AnimalOwner, AnimalAge, AnimalFather, AnimalMother, AnimalStatus, AddedDate, UpdatedDate, AnimalPictureName)' \
@@ -160,7 +160,7 @@ class DatabaseByPyMySQL:
             # current date and time
             now = datetime.now()
 
-            nowDate = str(now.strftime("%d-%m-%Y"))
+            nowDate = str(now.strftime("%d-%m-%Y %H:%M:%S"))
 
             # Adding
             sql = 'INSERT INTO user (name, phone, email, password, address, register_date, dob, nid)' \
@@ -476,38 +476,34 @@ def auction():
     pastAuc = []
 
     for d in data:
-        curTime = time.strftime('%Y %m %d %H:%M:%S')
+        curTime = time.strftime('%d-%m-%Y %H:%M:%S')
 
         dt_obj = datetime.strptime(curTime,
-                                   '%Y %m %d %H:%M:%S')
+                                   '%d-%m-%Y %H:%M:%S')
         curMilliSec = dt_obj.timestamp() * 1000
 
         dt_obj = datetime.strptime(d['AuctionStart'],
-                                   '%Y-%m-%d %H:%M')
+                                   '%d-%m-%Y %H:%M:%S')
         aucMilliSecStart = dt_obj.timestamp() * 1000
 
-        #print(str(curTime)+' :: '+str(d['AuctionStart']))
-        #print(str(curMilliSec)+' :: '+str(aucMilliSecStart))
-
         if(curMilliSec>=aucMilliSecStart):
-            #print('Running or past')
-            dt_obj = datetime.strptime(d['AuctionEnd'],
-                                       '%Y-%m-%d %H:%M')
-            aucMilliSecEnd = dt_obj.timestamp() * 1000
 
-            #print(str(curTime) + ' :: ' + str(d['AuctionEnd']))
-            #print(str(curMilliSec) + ' :: ' + str(aucMilliSecEnd))
+            dt_obj = datetime.strptime(d['AuctionEnd'],
+                                       '%d-%m-%Y %H:%M:%S')
+            aucMilliSecEnd = dt_obj.timestamp() * 1000
 
             if(curMilliSec<aucMilliSecEnd):
                 runningAuc.append(d)
-                #print('Running')
+
             else:
                 pastAuc.append(d)
-                #print('Past')
 
         elif(curMilliSec<aucMilliSecStart):
             upcommingAuc.append(d)
-            #print('Upcomming')
+
+    runningAuc = runningAuc[::-1]
+    upcommingAuc = upcommingAuc[::-1]
+    pastAuc = pastAuc[::-1]
 
     return render_template('auction.html', runningAuc=runningAuc, upcommingAuc=upcommingAuc, pastAuc=pastAuc)
 
@@ -519,18 +515,18 @@ def single_auction(auction_no):
     auc,sts = DB.getAuctionByID(auction_no)
     pgs, sts = DB.getPigeonsByAuctionID(auction_no)
 
-    curTime = time.strftime('%Y %m %d %H:%M:%S')
+    curTime = time.strftime('%d-%m-%Y %H:%M:%S')
 
     dt_obj = datetime.strptime(curTime,
-                               '%Y %m %d %H:%M:%S')
+                               '%d-%m-%Y %H:%M:%S')
     curMilliSec = dt_obj.timestamp() * 1000
 
     dt_obj = datetime.strptime(auc['AuctionEnd'],
-                               '%Y-%m-%d %H:%M')
+                               '%d-%m-%Y %H:%M:%S')
     aucMilliSecEnd = dt_obj.timestamp() * 1000
 
     dt_obj = datetime.strptime(auc['AuctionStart'],
-                               '%Y-%m-%d %H:%M')
+                               '%d-%m-%Y %H:%M:%S')
     aucMilliSecStart = dt_obj.timestamp() * 1000
 
     if curMilliSec > aucMilliSecStart:
@@ -550,18 +546,18 @@ def pigeon(pigeon):
     auc_pgs, sts = DB.getPigeonsByAuctionID(pg['AuctionID'])
 
 
-    curTime = time.strftime('%Y %m %d %H:%M:%S')
+    curTime = time.strftime('%d-%m-%Y %H:%M:%S')
 
     dt_obj = datetime.strptime(curTime,
-                               '%Y %m %d %H:%M:%S')
+                               '%d-%m-%Y %H:%M:%S')
     curMilliSec = dt_obj.timestamp() * 1000
 
     dt_obj = datetime.strptime(pg['EndTime'],
-                               '%Y-%m-%d %H:%M')
+                               '%d-%m-%Y %H:%M:%S')
     pigeonMilliSecEnd = dt_obj.timestamp() * 1000
 
     dt_obj = datetime.strptime(pg['StartTime'],
-                               '%Y-%m-%d %H:%M')
+                               '%d-%m-%Y %H:%M:%S')
     pigeonMilliSecStart = dt_obj.timestamp() * 1000
 
     if curMilliSec > pigeonMilliSecStart:
@@ -606,7 +602,7 @@ def Bid():
     curMilliSec = dt_obj.timestamp() * 1000
 
     aucTime_obj = datetime.strptime(pign['EndTime'],
-                                    '%Y-%m-%d %H:%M')
+                                    '%d-%m-%Y %H:%M:%S')
     aucMilliSec = aucTime_obj.timestamp() * 1000
 
     if curMilliSec < aucMilliSec:
@@ -624,7 +620,7 @@ def Bid():
 
                         if (aucMilliSec-curMilliSec) < 600000:
                             s = (aucMilliSec + 900000) / 1000.0
-                            updatedDate = datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M')
+                            updatedDate = datetime.fromtimestamp(s).strftime('%d-%m-%Y %H:%M:%S')
                             print('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
                             DB.updatePigeonTime(pigeonID, auctionID, updatedDate)
 
@@ -645,7 +641,7 @@ def Bid():
                 if (aucMilliSec - curMilliSec) < 600000:
 
                     s = (aucMilliSec + 900000) / 1000.0
-                    updatedDate = datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M')
+                    updatedDate = datetime.fromtimestamp(s).strftime('%d-%m-%Y %H:%M:%S')
                     print('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
 
                     DB.updatePigeonTime(pigeonID, auctionID, updatedDate)
@@ -747,6 +743,7 @@ def admin_add_auction():
                     endDate = request.form['endDate']
                     endTime = request.form['endTime']
 
+
                     print('TIMES = ', startDate, startTime, endDate, endTime)
                 except:
                     return render_template('admin_add_auction.html', error='Missing information')
@@ -754,6 +751,10 @@ def admin_add_auction():
 
                 auctionStart = startDate + ' '+ startTime
                 auctionEnd = endDate + ' '+ endTime
+
+                auctionStart = datetime.strptime(auctionStart, '%Y-%m-%d %H:%M').strftime('%d-%m-%Y %H:%M:%S')
+                auctionEnd = datetime.strptime(auctionEnd, '%Y-%m-%d %H:%M').strftime('%d-%m-%Y %H:%M:%S')
+
                 db = DatabaseByPyMySQL()
                 status = db.addAuctionEvent(auctionName, pigeon, details, auctionStart, auctionEnd, filename)
 
