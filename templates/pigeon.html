@@ -181,7 +181,18 @@
 
 
                             <div class="col-md-12">
-                                <p id="last_bidder">{% if pigeon['LastBidderName'] == '---' %}You are the first bidder, starting bid {{pigeon['Price']+bidChange}}{% endif %}</p>
+                                <!--{% if pigeon['LastBidderName'] == session['name'] %}
+                                    {% set colorr = '#00b330' %}
+                                {% elif pigeon['LastBidderName'] == '---' %}
+                                    {% set colorr = '#0003bf' %}
+                                {% else %}
+                                    {% set colorr = '#b31e00' %}
+                                {% endif %} -->
+                                <div id="last_bidder" > <!-- style="color:{{colorr}};" -->
+                                    {% if pigeon['LastBidderName'] == '---' %}
+                                    You are the first bidder, starting bid {{pigeon['Price']+bidChange}}
+                                    {% endif %}
+                                </div>
                             </div>
 
 
@@ -300,10 +311,16 @@
 
                         document.getElementById('table_bids').innerHTML = tbl;
 
-                        document.getElementById('last_bidder').innerHTML = 'Latest Bid by '+result[0].name+' amount '+result[0].BidAmount;
+
                         pigeonPrice = result[0].BidAmount;
                         pigeonEndTime = result[0].EndTime;
                         //console.log('Pigeon Price: '+pigeonPrice);
+                        let session_name = '{{session['name']}}';
+                        let clr = '#b31e00'; //Red
+                        if(session_name == result[0].name){
+                            clr = '#00b330'; //Red
+                        }
+                        document.getElementById('last_bidder').innerHTML = '<p style="color:'+clr+';">Latest Bid by '+result[0].name+' amount '+result[0].BidAmount+'</p>';
                     }
 
                     
