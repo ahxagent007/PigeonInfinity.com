@@ -48,31 +48,6 @@ class DatabaseByPyMySQL:
           print(data)'''
 
 
-
-    def getAllAnimals(self):
-        sql_qry = 'SELECT * FROM animal;'
-        self.cursor.execute(sql_qry)
-        data = self.cursor.fetchall()
-
-        print('getAllAnimals : ', str(data), flush=True)
-
-        if len(data)>0:
-            return data, True
-        else:
-            return data, False
-
-    def getAnimalByID(self, id):
-        sql_qry = 'SELECT * FROM animal WHERE AnimalID = {0};'.format(id)
-        self.cursor.execute(sql_qry)
-        data = self.cursor.fetchall()
-
-        print('getAnimalByID : ', str(data[0]), flush=True)
-
-        if len(data) > 0:
-            return data[0], True
-        else:
-            return data, False
-
     def SearchAnimal(self,searchText):
         sql_qry = 'SELECT * FROM animal WHERE AnimalCategory LIKE "%{0}%" OR AnimalTAG LIKE "%{0}%" OR AnimalOwner LIKE "%{0}%" OR AnimalBreed LIKE "%{0}%";'.format(searchText)
         self.cursor.execute(sql_qry)
@@ -328,6 +303,7 @@ class DatabaseByPyMySQL:
             return data[0], True
         else:
             return data, False
+
     def placeBid(self, pigeonID, userID, auctionID, amount, bidTime, name):
         try:
             # Adding
@@ -381,6 +357,28 @@ class DatabaseByPyMySQL:
 
         if len(data)>0:
             return data[0], True
+        else:
+            return data, False
+
+    def getArticleByID(self, id):
+
+        sql_all = 'SELECT * FROM article WHERE id = "{0}" ;'.format(id)
+        self.cursor.execute(sql_all)
+        data = self.cursor.fetchall()
+
+        if len(data)>0:
+            return data[0], True
+        else:
+            return data, False
+
+    def getAllArticles(self):
+
+        sql_all = 'SELECT * FROM article;'
+        self.cursor.execute(sql_all)
+        data = self.cursor.fetchall()
+
+        if len(data)>0:
+            return data, True
         else:
             return data, False
 
@@ -684,7 +682,16 @@ def profile():
 
 @app.route('/Articles')
 def article():
-    return render_template('article.html', userData={})
+    DB = DatabaseByPyMySQL()
+    articles, sts = DB.getAllArticles()
+    return render_template('article.html', articles=articles)
+
+@app.route('/Articles/<no>')
+def single_article(no):
+    DB = DatabaseByPyMySQL()
+    atricle,sts = DB.getArticleByID(no)
+
+    return render_template('single_article.html', article=atricle)
 
 
 
@@ -717,7 +724,7 @@ def about():
 
 @app.route('/Admin')
 def admin():
-    return 'admin'
+    return render_template('admin.html')
 
 
 @app.route('/Admin/Auction')
