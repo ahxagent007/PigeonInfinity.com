@@ -104,7 +104,6 @@ class DatabaseByPyMySQL:
             print('EMAIL DO NOT EXIST', flush=True)
             return False
 
-
     def getUserByEmail(self, email):
 
         sql_all = 'SELECT * FROM user WHERE email = "{0}" OR phone = "{0}";'.format(email)
@@ -127,9 +126,9 @@ class DatabaseByPyMySQL:
         else:
             return 'NULL','NULL', False
 
-    def Register(self, Name, Address, DOB, NID, Email, Phone, Pass):
+    def Register(self, Name, Address, DOB, NID, Email, Phone, Pass, ref):
 
-        print(Name, Address, DOB, NID, Email, Phone, Pass)
+        print(Name, Address, DOB, NID, Email, Phone, Pass, ref)
 
         if not self.isEmailExist(Email, Phone):
             # current date and time
@@ -138,17 +137,15 @@ class DatabaseByPyMySQL:
             nowDate = str(now.strftime("%Y-%m-%d %H:%M:%S"))
 
             # Adding
-            sql = 'INSERT INTO user (name, phone, email, password, address, register_date, dob, nid)' \
-                   ' VALUES("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}");'\
-                    .format(Name, Phone, Email, Pass, Address, nowDate, DOB, NID)
+            sql = 'INSERT INTO user (name, phone, email, password, address, register_date, dob, nid, reference)' \
+                   ' VALUES("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}", "{8}");'\
+                    .format(Name, Phone, Email, Pass, Address, nowDate, DOB, NID, ref)
             print(sql)
             self.cursor.execute(sql)
             self.conection.commit()
             return 'REGISTRATION COMPLETE, PLEASE LOGIN'
         else:
             return 'USER EXISTED, TRY LOGIN'
-
-
 
     def addAuctionEvent(self, auctionName, pigeon, details, auctionStart, auctionEnd, filename):
 
@@ -167,13 +164,13 @@ class DatabaseByPyMySQL:
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
-    def addPigeon(self, AuctionID, PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, filename, otherPics):
+    def addPigeon(self, AuctionID, PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, filename, otherPics, vdo):
         print(otherPics)
         try:
             # Adding
-            sql1 = 'INSERT INTO Pigeon(AuctionID, PigeonRing, PigeonName, Price, MainPic, AllPic, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, StartTime, EndTime)' \
-                   ' VALUES({0},"{1}","{2}",{3},"{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}");'\
-                .format(AuctionID, PigeonRing, PigeonName, StartingPrice, filename, otherPics, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd)
+            sql1 = 'INSERT INTO Pigeon(AuctionID, PigeonRing, PigeonName, Price, MainPic, AllPic, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, StartTime, EndTime, vdoLink)' \
+                   ' VALUES({0},"{1}","{2}",{3},"{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}", "{13}");'\
+                .format(AuctionID, PigeonRing, PigeonName, StartingPrice, filename, otherPics, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, vdo)
             print(sql1, flush=True)
             self.cursor.execute(sql1)
             self.conection.commit()
@@ -382,6 +379,20 @@ class DatabaseByPyMySQL:
         else:
             return data, False
 
+    def updateUserPoint(self, userID, amount):
+        try:
+            sql = 'UPDATE user ' \
+                   'SET bid_limit = bid_limit+{0}*.2, bid_point = bid_point+1, total_bid_amount = total_bid_amount+{1} ' \
+                   'WHERE user_id = {2}'.format(amount, amount, userID)
+            print(sql, flush=True)
+            self.cursor.execute(sql)
+            self.conection.commit()
+            return True
+        except:
+            print('Error on updateUserPoint()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
+
 ###############################################################
 
 @app.route('/')
@@ -460,9 +471,11 @@ def registration():
             user_pass1 = request.form['user_pass1']
             user_pass2 = request.form['user_pass2']
 
+            reference = request.form['reference']
+
             if user_pass1 == user_pass2:
                 DB = DatabaseByPyMySQL()
-                msg = DB.Register(user_name, user_address, user_dob, user_nid, user_email, user_phone, computeMD5hash(user_pass1))
+                msg = DB.Register(user_name, user_address, user_dob, user_nid, user_email, user_phone, computeMD5hash(user_pass1), reference)
 
                 return render_template('register.html', error=msg, userData={})
             else:
@@ -639,6 +652,7 @@ def Bid():
                             status = 'Your bid placed successfully! Time Increased!'
                         else:
                             status = 'Your bid placed successfully!'
+                            DB.updateUserPoint(userID,(amount*0.25))
                     else:
                         status = 'Error!'
                 else:
@@ -651,7 +665,6 @@ def Bid():
             if bid_status:
 
                 if (aucMilliSec - curMilliSec) < 600000:
-
                     s = (aucMilliSec + 900000) / 1000.0
                     updatedDate = datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M:%S')
                     print('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
@@ -660,6 +673,7 @@ def Bid():
                     status = 'Your bid placed successfully! Time Increased!'
                 else:
                     status = 'Your bid placed successfully!'
+                    DB.updateUserPoint(userID,(amount*0.25))
             else:
                 status = 'Error!'
     else:
@@ -852,13 +866,14 @@ def admin_add_auction_pigeons():
                         BreedBy = request.form['BreedBy'+str(i+1)]
                         OfferBy = request.form['OfferBy'+str(i+1)]
                         PigeonDetails = request.form['PigeonDetails'+str(i+1)]
+                        vdo = request.form['vdo'+str(i+1)]
 
                     except:
                         return render_template('admin_add_auction_pigeons.html', error='Missing information', data = data)
                         print('Error = ', str(sys.exc_info()[0]), flush=True)
 
                     db = DatabaseByPyMySQL()
-                    status = db.addPigeon(session['AuctionID'], PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, session['AuctionStart'], session['AuctionEnd'], filename, otherPics)
+                    status = db.addPigeon(session['AuctionID'], PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, session['AuctionStart'], session['AuctionEnd'], filename, otherPics, vdo)
                     print(str(status), flush=True)
 
             except HTTPError:

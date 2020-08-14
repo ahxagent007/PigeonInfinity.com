@@ -23,6 +23,12 @@
     				<h2 class="mb-4">Register</h2>
                     {% if error != ' ' %}
                         <h5 class="mb-4">{{error}}</h5>
+                        {% if error == 'REGISTRATION COMPLETE, PLEASE LOGIN' %}
+                            <script>
+                                alert("REGISTRATION COMPLETE, PLEASE LOGIN");
+                                window.location.replace("/Login");
+                            </script>
+                        {% endif%}
                     {% endif %}
     				<form action="{{url_for('registration')}}" class="appointment" method="post">
     					<div class="row">
@@ -80,6 +86,12 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                   <input type="password" class="form-control" placeholder="Re-enter Password" name="user_pass2" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                  <input class="form-control" placeholder="Enter the name of your reference person" name="reference">
                                 </div>
                             </div>
 
