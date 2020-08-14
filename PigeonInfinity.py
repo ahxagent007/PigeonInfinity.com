@@ -373,13 +373,25 @@ class DatabaseByPyMySQL:
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
+    def getSetting(self, page):
+
+        sql_all = 'SELECT * FROM setting WHERE page = "{0}" ;'.format(page)
+        self.cursor.execute(sql_all)
+        data = self.cursor.fetchall()
+
+        if len(data)>0:
+            return data[0], True
+        else:
+            return data, False
+
 ###############################################################
 
 @app.route('/')
 def home():
     DB = DatabaseByPyMySQL()
     auc, sts = DB.getLastAuction()
-    return render_template('index.html', auc=auc)
+    setting, sts1 = DB.getSetting('home')
+    return render_template('index.html', auc=auc, setting=setting)
 
 @app.route('/Login', methods=['POST', 'GET'])
 def login():
