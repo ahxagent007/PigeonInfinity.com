@@ -119,6 +119,35 @@
     </section>
 
 
+    {% if auc %}
+    <section class="ftco-section bg-light">
+      <div class="container">
+        <div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>Latest Auctions</h2>
+          </div>
+        </div>
+        <div class="row d-flex">
+            <div class="col-md-12 ftco-animate">
+                <div class="blog-entry align-self-stretch">
+                  <a href="Auction/{{auc['AuctionID']}}" class="block-20 rounded" style="background-image: url('static/UPLOADS/{{auc['MainPicture']}}');">
+                  </a>
+                  <div class="text p-4">
+                    <div class="meta mb-2">
+                      <div><a href="Auction/{{auc['AuctionID']}}">Time</a></div>
+                      <div><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionStart']}} - {{auc['AuctionEnd']}}</a></div>
+                      <div><a href="Auction/{{auc['AuctionID']}}" class="meta-chat"><span class="fa fa-certificate"></span></a></div>
+                    </div>
+                    <h3 class="heading"><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionName']}}</a></h3>
+                    <p><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionDetails']}}</a></p>
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
     <section class="ftco-section testimony-section" style="background-image: url('static/images/bg_2.jpg');">
     	<div class="overlay"></div>
       <div class="container">

@@ -377,7 +377,9 @@ class DatabaseByPyMySQL:
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    DB = DatabaseByPyMySQL()
+    auc, sts = DB.getLastAuction()
+    return render_template('index.html', auc=auc)
 
 @app.route('/Login', methods=['POST', 'GET'])
 def login():
