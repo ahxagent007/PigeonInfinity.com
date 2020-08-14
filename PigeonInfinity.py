@@ -692,15 +692,15 @@ def contact():
 
 @app.route('/Clubs')
 def club():
-    return render_template('contact.html', userData={})
+    return render_template('clubs.html', userData={})
 
 @app.route('/Buy')
 def buy():
-    return render_template('contact.html', userData={})
+    return render_template('buy.html', userData={})
 
 @app.route('/About')
 def about():
-    return render_template('contact.html', userData={})
+    return render_template('about.html', userData={})
 
 
 @app.route('/Admin')
