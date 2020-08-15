@@ -34,31 +34,42 @@
                                 <th>Name</th>
                                 <th>Email::Phone</th>
                                 <th>Address</th>
-                                <th>NID</th>
-                                <th>Bid::Amount</th>
+                                <th>NID::DOB.</th>
+                                <th>Reference</th>
+                                <th>Approved By</th>
                                 <th>Last Login</th>
+                                <th>IP</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for mem in members %}
                             <tr>
                                 <td>{{mem['name']}}</td>
-                                <td>{{mem['email']}} :: {{mem['phone']}}</td>
+                                <td>{{mem['email']}}::{{mem['phone']}}</td>
                                 <td>{{mem['address']}}</td>
-                                <td>{{mem['nid']}}</td>
-                                <td>{{mem['bid_point']}} :: {{mem['total_bid_amount']}}</td>
-                                <td>{{mem['last_login']}}</td>
+                                <td>{{mem['nid']}}::{{mem['dob']}}</td>
+                                <td>{{mem['reference']}}</td>
+                                <td>{{mem['approvedBy']}}</td>
+                                <td>{{mem['lastLogin']}}</td>
+                                <td>{{mem['ip_address']}}</td>
+                                <td><form action="{{url_for('admin_member_verified')}}" method="post">
+                                    <button class="btn btn-danger" name="unverify" value="{{mem['user_id']}}">Unverify</button>
+                                </form></td>
                             </tr>
                         {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th>Name</th>
-                                <th>Email::Phone</th>
+                                <th>Email :: Phone</th>
                                 <th>Address</th>
-                                <th>NID</th>
-                                <th>Bid::Amount</th>
+                                <th>NID :: DOB.</th>
+                                <th>Reference</th>
+                                <th>Approved By</th>
                                 <th>Last Login</th>
+                                <th>IP</th>
+                                <th>Action</th>
                             </tr>
                         </tfoot>
                     </table>

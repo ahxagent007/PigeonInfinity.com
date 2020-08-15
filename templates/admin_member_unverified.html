@@ -35,8 +35,10 @@
                                 <th>Email::Phone</th>
                                 <th>Address</th>
                                 <th>NID</th>
-                                <th>Bid::Amount</th>
-                                <th>Last Login</th>
+                                <th>DOB.</th>
+                                <th>Reg Date</th>
+                                <th>Reference</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,8 +48,12 @@
                                 <td>{{mem['email']}} :: {{mem['phone']}}</td>
                                 <td>{{mem['address']}}</td>
                                 <td>{{mem['nid']}}</td>
-                                <td>{{mem['bid_point']}} :: {{mem['total_bid_amount']}}</td>
-                                <td>{{mem['last_login']}}</td>
+                                <td>{{mem['dob']}}</td>
+                                <td>{{mem['register_date']}}</td>
+                                <td>{{mem['reference']}}</td>
+                                <td><form action="{{url_for('admin_member_unverified')}}" method="post">
+                                    <button class="btn btn-success" name="verify" value="{{mem['user_id']}}">Verify</button>
+                                </form></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -57,8 +63,10 @@
                                 <th>Email::Phone</th>
                                 <th>Address</th>
                                 <th>NID</th>
-                                <th>Bid::Amount</th>
-                                <th>Last Login</th>
+                                <th>DOB.</th>
+                                <th>Reg Date</th>
+                                <th>Reference</th>
+                                <th>Action</th>
                             </tr>
                         </tfoot>
                     </table>

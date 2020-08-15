@@ -393,6 +393,41 @@ class DatabaseByPyMySQL:
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
+
+    def getAllMembers(self):
+        sql_qry = 'SELECT * FROM user;'
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+
+        if len(data)>0:
+            return data, True
+        else:
+            return data, False
+
+    def getUnverifiedMembers(self):
+        sql_qry = 'SELECT * FROM user WHERE status = "UNVERIFIED";'
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+
+        if len(data)>0:
+            return data, True
+        else:
+            return data, False
+
+    def getVerifiedMembers(self):
+        sql_qry = 'SELECT * FROM user WHERE status = "VERIFIED";'
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+
+        if len(data)>0:
+            return data, True
+        else:
+            return data, False
+
+
 ###############################################################
 
 @app.route('/')
@@ -886,7 +921,41 @@ def admin_add_auction_pigeons():
 
 @app.route('/Admin/Member')
 def admin_member():
-    return render_template('admin_member.html', userData={})
+    DB = DatabaseByPyMySQL()
+    members, sts = DB.getAllMembers()
+
+    return render_template('admin_member.html', members=members)
+
+@app.route('/Admin/Member/Unverified', methods=['GET', 'POST'])
+def admin_member_unverified():
+    DB = DatabaseByPyMySQL()
+    members, sts = DB.getUnverifiedMembers()
+
+    if request.method == 'POST':
+        try:
+            user_id = request.form['verify']
+            print(user_id)
+
+        except HTTPError:
+            print('Exception : ' + str(HTTPException), flush=True)
+
+    return render_template('admin_member_unverified.html', members=members)
+
+@app.route('/Admin/Member/Verified', methods=['GET','POST'])
+def admin_member_verified():
+    DB = DatabaseByPyMySQL()
+    members, sts = DB.getVerifiedMembers()
+
+    if request.method == 'POST':
+        try:
+            user_id = request.form['unverify']
+            print(user_id)
+
+        except HTTPError:
+            print('Exception : ' + str(HTTPException), flush=True)
+
+    return render_template('admin_member_verified.html', members=members)
+
 
 @app.route('/Admin/Article')
 def admin_article():
