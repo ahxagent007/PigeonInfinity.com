@@ -5,7 +5,7 @@
 
 {% block menu %}
 <ul class="navbar-nav ml-auto">
-    <li class="nav-item"><a href="{{url_for('admin_auction')}}" class="nav-link">Auction</a></li>
+    <li class="nav-item "><a href="{{url_for('admin_auction')}}" class="nav-link">Auction</a></li>
     <li class="nav-item "><a href="{{url_for('admin_member')}}" class="nav-link">Member</a></li>
     <li class="nav-item active"><a href="{{url_for('admin_article')}}" class="nav-link">Articles</a></li>
     <li class="nav-item"><a href="{{url_for('admin_club')}}" class="nav-link">Clubs</a></li>
@@ -13,5 +13,66 @@
 {% endblock %}
 
 {% block body %}
+<section class="ftco-section bg-light">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-6 text-center mb-5">
+				<h2 class="heading-section">Add Articles</h2>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-md-12">
+				<div class="wrapper">
+
+					<div class="row no-gutters">
+						<div class="col-md-12">
+							<div class="contact-wrap w-100 p-md-5 p-4">
+								<h3 class="mb-4">Article Details</h3>
+								{% if error != ' ' %}
+									<h5 class="mb-4" style="color:#e00000;">{{error}}</h5>
+								{% endif %}
+								<form action="{{url_for('admin_article')}}" method="POST" id="contactForm" name="contactForm" class="contactForm" enctype=multipart/form-data>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="label" for="title">Article Title</label>
+												<input type="text" class="form-control" name="title" id="title" placeholder="Auction Name">
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="label" >Article Paragraph #01</label>
+												<textarea name="para1" class="form-control" id="para1" cols="50" rows="10" placeholder="Paragraph #01"></textarea>
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="label" >Article Paragraph #02</label>
+												<textarea name="para2" class="form-control" id="para2" cols="50" rows="10" placeholder="Paragraph #02"></textarea>
+											</div>
+										</div>
+
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="label" >Article Picture</label><br>
+												<input name="pic" type="file" accept="image/*" id="pic"/>
+											</div>
+										</div>
+
+										<div class="col-md-12">
+											<div class="form-group">
+												<input type="submit" value="Add" class="btn btn-primary">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 
 {% endblock %}

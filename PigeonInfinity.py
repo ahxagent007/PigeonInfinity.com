@@ -465,7 +465,6 @@ class DatabaseByPyMySQL:
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
-
     def unverifyMember(self, userID, adminName):
         try:
 
@@ -480,6 +479,21 @@ class DatabaseByPyMySQL:
 
         except:
             print('Error on unverifyMember()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
+
+    def addArticle(self, title, para1, para2, auth, filename):
+
+        try:
+            sql1 = 'INSERT INTO article (title, para1, para2, auth, picture)' \
+                   ' VALUES("{0}","{1}","{2}","{3}","{4}");'.format(title, para1, para2, auth, filename)
+            print(sql1, flush=True)
+            self.cursor.execute(sql1)
+            self.conection.commit()
+            return True
+
+        except:
+            print('Error on addArticle()', flush=True)
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
@@ -1067,10 +1081,50 @@ def admin_member_verified():
     return render_template('admin_member_verified.html', members=members)
 
 
-@app.route('/Admin/Article')
+@app.route('/Admin/Article', methods=['GET', 'POST'])
 def admin_article():
     if session.get('admin') is None:
         return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        try:
+            if 'pic' not in request.files:
+                print('No file part', flush=True)
+                return render_template('admin_article.html', error='No picture selected')
+            file = request.files['pic']
+            # if user does not select file, browser also
+            # submit an empty part without filename
+            if file.filename == '':
+                print('No selected file', flush=True)
+                return render_template('admin_article.html', error='Only allow png, jpg formats')
+
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filename = str(current_milli_time()) + filename[-4:]
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+                print(filename, flush=True)
+
+                try:
+                    title = request.form['title']
+                    para1 = request.form['para1']
+                    para2 = request.form['para2']
+
+                except:
+                    return render_template('admin_article.html', error='Missing information')
+                    print('Error = ', str(sys.exc_info()[0]), flush=True)
+
+
+                db = DatabaseByPyMySQL()
+                status = db.addArticle(title, para1, para2, session['admin'], filename)
+
+                print(str(status), flush=True)
+            return render_template('admin_article.html', error='Article added')
+
+        except HTTPError:
+            print('Exception : ' + str(HTTPException), flush=True)
+            return render_template('admin_article.html', error='PLEASE FILL UP CORRECTLY')
+
 
     return render_template('admin_article.html', userData={})
 
