@@ -115,6 +115,17 @@ class DatabaseByPyMySQL:
         else:
             return data, False
 
+    def getAdminByEmail(self, email):
+
+        sql_all = 'SELECT * FROM admin WHERE email = "{0}";'.format(email)
+        self.cursor.execute(sql_all)
+        data = self.cursor.fetchall()
+
+        if len(data) > 0:
+            return data[0], True
+        else:
+            return data, False
+
     def Login(self, Email, Pass):
         print(Email, Pass, flush=True)
         if self.isEmailExist(Email):
@@ -125,6 +136,16 @@ class DatabaseByPyMySQL:
                 return 'NULL','NULL', False
         else:
             return 'NULL','NULL', False
+
+    def LoginAdmin(self, Email, Pass):
+        print(Email, Pass, flush=True)
+
+        user, sts = self.getAdminByEmail(Email)
+
+        if user['pass'] == Pass:
+            return user['name'], True
+        else:
+            return 'NULL', False
 
     def Register(self, Name, Address, DOB, NID, Email, Phone, Pass, ref):
 
@@ -427,6 +448,40 @@ class DatabaseByPyMySQL:
         else:
             return data, False
 
+    def verifyMember(self, userID, adminName):
+        try:
+
+            sql = 'UPDATE user ' \
+                   'SET status = "VERIFIED", approvedBy = "{0}" ' \
+                   'WHERE user_id = {1}'.format(adminName, userID)
+            print(sql, flush=True)
+            self.cursor.execute(sql)
+            self.conection.commit()
+
+            return True
+
+        except:
+            print('Error on verifyMember()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
+
+
+    def unverifyMember(self, userID, adminName):
+        try:
+
+            sql = 'UPDATE user ' \
+                   'SET status = "UNVERIFIED", approvedBy = "{0}" ' \
+                   'WHERE user_id = {1}'.format(adminName, userID)
+            print(sql, flush=True)
+            self.cursor.execute(sql)
+            self.conection.commit()
+
+            return True
+
+        except:
+            print('Error on unverifyMember()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
 
 ###############################################################
 
@@ -771,19 +826,59 @@ def about():
     return render_template('about.html', userData={})
 
 
+@app.route('/Admin/Login', methods=['POST', 'GET'])
+def admin_login():
+
+    if session.get('admin') is not None:
+        return redirect(url_for('admin'))
+
+    if request.method == 'POST':
+        email = request.form['user_email']
+        pw = request.form['user_pass']
+
+        DB = DatabaseByPyMySQL()
+        user, sts = DB.getAdminByEmail(email)
+
+        if sts:
+            pwd = computeMD5hash(pw)
+            if pwd == user['pass']:
+
+                session['admin'] = user['name']
+
+                return redirect(url_for('admin'))
+            else:
+                return render_template('admin_login.html', error='Wrong password')
+        else:
+            return render_template('admin_login.html', error='Not Found')
+
+    return render_template('admin_login.html')
+
+@app.route('/Admin/Logout')
+def admin_logout():
+    session.pop('admin', None)
+
+    return redirect(url_for('home'))
+
 @app.route('/Admin')
 def admin():
-    return render_template('admin.html')
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
 
+    return render_template('admin.html')
 
 @app.route('/Admin/Auction')
 def admin_auction():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
     DB = DatabaseByPyMySQL()
     data, sts = DB.getAllAuctions()
     return render_template('admin_auction.html', auctions = data)
 
 @app.route('/Admin/Auction/Add', methods=['GET', 'POST'])
 def admin_add_auction():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
+
     if request.method == 'POST':
         try:
             if 'auction_image' not in request.files:
@@ -849,6 +944,8 @@ def admin_add_auction():
 
 @app.route('/Admin/Auction/Add/Pigeons', methods=['POST','GET'])
 def admin_add_auction_pigeons():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
 
     data = {
         'pigeonCount': int(session['totalPigeon']),
@@ -921,6 +1018,9 @@ def admin_add_auction_pigeons():
 
 @app.route('/Admin/Member')
 def admin_member():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
+
     DB = DatabaseByPyMySQL()
     members, sts = DB.getAllMembers()
 
@@ -928,6 +1028,9 @@ def admin_member():
 
 @app.route('/Admin/Member/Unverified', methods=['GET', 'POST'])
 def admin_member_unverified():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
+
     DB = DatabaseByPyMySQL()
     members, sts = DB.getUnverifiedMembers()
 
@@ -935,6 +1038,8 @@ def admin_member_unverified():
         try:
             user_id = request.form['verify']
             print(user_id)
+            DB.verifyMember(user_id, session['admin'])
+            return redirect(url_for('admin_member_unverified'))
 
         except HTTPError:
             print('Exception : ' + str(HTTPException), flush=True)
@@ -943,6 +1048,9 @@ def admin_member_unverified():
 
 @app.route('/Admin/Member/Verified', methods=['GET','POST'])
 def admin_member_verified():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
+
     DB = DatabaseByPyMySQL()
     members, sts = DB.getVerifiedMembers()
 
@@ -950,6 +1058,8 @@ def admin_member_verified():
         try:
             user_id = request.form['unverify']
             print(user_id)
+            DB.unverifyMember(user_id, session['admin'])
+            return redirect(url_for('admin_member_verified'))
 
         except HTTPError:
             print('Exception : ' + str(HTTPException), flush=True)
@@ -959,10 +1069,16 @@ def admin_member_verified():
 
 @app.route('/Admin/Article')
 def admin_article():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
+
     return render_template('admin_article.html', userData={})
 
 @app.route('/Admin/Club')
 def admin_club():
+    if session.get('admin') is None:
+        return redirect(url_for('admin_login'))
+
     return render_template('admin_club.html', userData={})
 
 
