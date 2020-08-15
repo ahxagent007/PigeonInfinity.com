@@ -802,6 +802,8 @@ def profile():
 def article():
     DB = DatabaseByPyMySQL()
     articles, sts = DB.getAllArticles()
+    articles.reverse()
+
     return render_template('article.html', articles=articles)
 
 @app.route('/Articles/<no>')
