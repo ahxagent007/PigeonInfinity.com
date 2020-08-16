@@ -833,6 +833,14 @@ def profile():
 
     return render_template('profile.html', user=pro)
 
+@app.route('/Profile/<id>')
+def public_profile(id):
+
+    DB = DatabaseByPyMySQL()
+    pro, sts = DB.getUserByID(id)
+
+    return render_template('public_profile.html', user=pro)
+
 @app.route('/Articles')
 def article():
     DB = DatabaseByPyMySQL()

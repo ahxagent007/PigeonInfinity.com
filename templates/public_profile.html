@@ -33,10 +33,6 @@
 
 		            <ul class="pricing-text mb-5">
 		              <li><span class="fa fa-money mr-2"></span>Total Bid Amount : {{user['total_bid_amount']}}</li>
-		              <li><span class="fa fa-phone mr-2"></span>{{user['phone']}}</li>
-		              <li><span class="fa fa-envelope mr-2"></span>{{user['email']}}</li>
-		              <li><span class="fa fa-map-marker mr-2"></span>{{user['address']}}</li>
-		              <li><span class="fa fa-id-card mr-2"></span>NID: {{user['nid']}}</li>
 						{% if user['status'] == 'UNVERIFIED' %}
 							{% set icon = 'times' %}
 						{% else %}
@@ -44,8 +40,6 @@
 						{% endif %}
 		              <li><span class="fa fa-{{icon}} mr-2"></span>{{user['status']}}</li>
 		            </ul>
-
-	            	<a href="#" class="btn btn-primary d-block px-2 py-3">Edit Profile</a>
 	            </div>
 	          </div>
 	            </div>
