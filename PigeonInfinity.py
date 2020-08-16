@@ -796,7 +796,7 @@ def getTime():
 
 @app.route('/Profile')
 def profile():
-    return render_template('profile.html', userData={})
+    return render_template('profile.html')
 
 @app.route('/Articles')
 def article():
