@@ -72,6 +72,7 @@
     </section>
 
 
+
     <section class="ftco-section ftco-no-pt ftco-no-pb">
     	<div class="container">
     		<div class="row d-flex no-gutters">
@@ -117,36 +118,68 @@
         </div>
     	</div>
     </section>
-
-
-    {% if auc %}
-    <section class="ftco-section bg-light">
-      <div class="container">
-        <div class="row justify-content-center pb-5 mb-3">
-          <div class="col-md-7 heading-section text-center ftco-animate">
-            <h2>Latest Auctions</h2>
-          </div>
-        </div>
-        <div class="row d-flex">
-            <div class="col-md-12 ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                  <a href="Auction/{{auc['AuctionID']}}" class="block-20 rounded" style="background-image: url('static/UPLOADS/{{auc['MainPicture']}}');">
-                  </a>
-                  <div class="text p-4">
-                    <div class="meta mb-2">
-                      <div><a href="Auction/{{auc['AuctionID']}}">Time</a></div>
-                      <div><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionStart']}} - {{auc['AuctionEnd']}}</a></div>
-                      <div><a href="Auction/{{auc['AuctionID']}}" class="meta-chat"><span class="fa fa-certificate"></span></a></div>
+    <div class="container  bg-light">
+        <div class="row">
+            <div class="col-8 ftco-animate">
+                {% if auc %}
+                    <section class="ftco-section">
+                  <div class="container">
+                    <div class="row justify-content-center pb-5 mb-3">
+                      <div class="col-md-7 heading-section text-center ftco-animate">
+                        <h2>Latest Auctions</h2>
+                      </div>
                     </div>
-                    <h3 class="heading"><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionName']}}</a></h3>
-                    <p><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionDetails']}}</a></p>
+                    <div class="row d-flex">
+                        <div class="col-md-12 ftco-animate">
+                            <div class="blog-entry align-self-stretch">
+                              <a href="Auction/{{auc['AuctionID']}}" class="block-20 rounded" style="background-image: url('static/UPLOADS/{{auc['MainPicture']}}');">
+                              </a>
+                              <div class="text p-4">
+                                <div class="meta mb-2">
+                                  <div><a href="Auction/{{auc['AuctionID']}}">Time</a></div>
+                                  <div><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionStart']}} - {{auc['AuctionEnd']}}</a></div>
+                                  <div><a href="Auction/{{auc['AuctionID']}}" class="meta-chat"><span class="fa fa-certificate"></span></a></div>
+                                </div>
+                                <h3 class="heading"><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionName']}}</a></h3>
+                                <p><a href="Auction/{{auc['AuctionID']}}">{{auc['AuctionDetails']}}</a></p>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </section>
+                {% endif %}
+            </div>
+            <div class="col-md-4 ftco-animate">
+                    <div class="card" style="font-size: 10px; overflow: auto; max-height: 400px; min-height: 600px; margin: auto; text-align: center;">
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Time</th>
+                                        <th scope="col">User</th>
+                                        <th scope="col">Pigeon</th>
+                                        <th scope="col">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for b in bids %}
+                                        <tr>
+                                            <td>{{b['BidTimeDate']}}</td>
+                                            <td>{{b['name']}}</td>
+                                            <td><a href="/Auction/Pigeon/{{b['PigeonID']}}">{{b['PigeonRing']}}({{b['PigeonName']}})</a></td>
+                                            <td>{{b['BidAmount']}}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
         </div>
-      </div>
-    </section>
-    {% endif %}
+    </div>
+
 
     <section class="ftco-section testimony-section" style="background-image: url('static/images/bg_2.jpg');">
     	<div class="overlay"></div>

@@ -147,12 +147,20 @@
                                     <tr>
                                         <th scope="col">Time</th>
                                         <th scope="col">User</th>
-                                        <th scope="col">Pigeon</th>
                                         <th scope="col">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody id="table_bids">
-                                    
+                                    {% if running == 'Ended' %}
+                                        {% for b in bid_list %}
+                                            <tr>
+                                                <td>{{b['BidTimeDate']}}</td>
+                                                <td>{{b['name']}}</td>
+                                                <td>{{b['BidAmount']}}</td>
+                                            </tr>
+                                        {% endfor %}
+
+                                    {% endif %}
 
                                 </tbody>
                             </table>
@@ -313,7 +321,6 @@
                             tbl += '<tr>'+
                                         '<td>'+item.BidTimeDate+'</td>'+
                                         '<td>'+item.name+'</td>'+
-                                        '<td>'+item.PigeonRing+'('+item.PigeonName+') </td>'+
                                         '<td>'+item.BidAmount+'</td>'+
                                     '</tr>';
 

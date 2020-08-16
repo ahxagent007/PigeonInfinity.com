@@ -322,6 +322,22 @@ class DatabaseByPyMySQL:
         else:
             return data, False
 
+    def getLatestBids(self):
+
+        sql_qry = 'SELECT bid.BidAmount, bid.BidTimeDate, user.name, pigeon.PigeonName, pigeon.PigeonRing, pigeon.PigeonID FROM bid ' \
+                  'JOIN user ON user.user_id = bid.UserID ' \
+                  'JOIN pigeon ON pigeon.PigeonID = bid.PigeonID '  \
+                  'ORDER BY BidID DESC LIMIT 200;'
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        print('getLatestBids : ', str(data), flush=True)
+
+        if len(data) > 0:
+            return data, True
+        else:
+            return data, False
+
     def placeBid(self, pigeonID, userID, auctionID, amount, bidTime, name):
         try:
             # Adding
@@ -504,7 +520,8 @@ def home():
     DB = DatabaseByPyMySQL()
     auc, sts = DB.getLastAuction()
     setting, sts1 = DB.getSetting('home')
-    return render_template('index.html', auc=auc, setting=setting)
+    bids, sts2 = DB.getLatestBids()
+    return render_template('index.html', auc=auc, setting=setting, bids=bids)
 
 @app.route('/Login', methods=['POST', 'GET'])
 def login():
@@ -672,7 +689,8 @@ def single_auction(auction_no):
 def pigeon(pigeon):
     DB = DatabaseByPyMySQL()
     pg, sts = DB.getPigeonByID(pigeon)
-    auc_pgs, sts = DB.getPigeonsByAuctionID(pg['AuctionID'])
+    auc_pgs, stss = DB.getPigeonsByAuctionID(pg['AuctionID'])
+    bid_list, stsss = DB.getBids(pigeon)
 
 
     curTime = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -702,7 +720,7 @@ def pigeon(pigeon):
     lst = x.strip('[]').replace("'", '').replace(' ', '').split(',')
     pg['AllPic'] = lst
 
-    return render_template('pigeon.html', pigeon=pg, running=running, auc_pgs=auc_pgs)
+    return render_template('pigeon.html', pigeon=pg, running=running, auc_pgs=auc_pgs, bid_list=bid_list)
 
 @app.route('/Auction/Pigeon/Bids', methods=['POST'])
 def getBid():
@@ -756,7 +774,7 @@ def Bid():
                             status = 'Your bid placed successfully! Time Increased!'
                         else:
                             status = 'Your bid placed successfully!'
-                            DB.updateUserPoint(userID,(amount*0.25))
+                            DB.updateUserPoint(userID, amount)
                     else:
                         status = 'Error!'
                 else:
@@ -777,7 +795,7 @@ def Bid():
                     status = 'Your bid placed successfully! Time Increased!'
                 else:
                     status = 'Your bid placed successfully!'
-                    DB.updateUserPoint(userID,(amount*0.25))
+                    DB.updateUserPoint(userID,amount)
             else:
                 status = 'Error!'
     else:
