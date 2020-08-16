@@ -15,7 +15,39 @@
 {% endblock %}
 
 {% block body %}
+        <section class="ftco-section bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>Personal Profile</h2>
+          </div>
+        </div>
+    		<div class="row">
+                <div class="col-md-3"></div>
+    			<div class="col-md-6 ftco-animate">
+	                <div class="block-7">
+	          	<div class="img" style="background-image: url(static/UPLOADS/{{user['pro_pic']}});"></div>
+	            <div class="text-center p-4">
+	            	<span class="excerpt d-block">{{user['name']}}</span>
+	            	<span class="price"><sup><i class="fa fa-star" aria-hidden="true"></i></sup> <span class="number">{{user['bid_point']}}</span> <sub>Bids</sub></span>
 
+		            <ul class="pricing-text mb-5">
+		              <li><span class="fa fa-money mr-2"></span>Total Bid Amount : {{user['total_bid_amount']}}</li>
+		              <li><span class="fa fa-phone mr-2"></span>{{user['phone']}}</li>
+		              <li><span class="fa fa-envelope mr-2"></span>{{user['email']}}</li>
+		              <li><span class="fa fa-map-marker mr-2"></span>{{user['address']}}</li>
+		              <li><span class="fa fa-check mr-2"></span>NID: {{user['nid']}}</li>
+		              <li><span class="fa fa-times mr-2"></span>Status: {{user['status']}}</li>
+		            </ul>
+
+	            	<a href="#" class="btn btn-primary d-block px-2 py-3">Get Started</a>
+	            </div>
+	          </div>
+	            </div>
+                <div class="col-md-3"></div>
+	      </div>
+    	</div>
+    </section>
 {% endblock %}
 
 

@@ -115,6 +115,17 @@ class DatabaseByPyMySQL:
         else:
             return data, False
 
+    def getUserByID(self, id):
+
+        sql_all = 'SELECT * FROM user WHERE user_id = {0};'.format(id)
+        self.cursor.execute(sql_all)
+        data = self.cursor.fetchall()
+
+        if len(data)>0:
+            return data[0], True
+        else:
+            return data, False
+
     def getAdminByEmail(self, email):
 
         sql_all = 'SELECT * FROM admin WHERE email = "{0}";'.format(email)
@@ -814,7 +825,13 @@ def getTime():
 
 @app.route('/Profile')
 def profile():
-    return render_template('profile.html')
+    if session.get('user_id') is None:
+        return redirect(url_for('login'))
+
+    DB = DatabaseByPyMySQL()
+    pro, sts = DB.getUserByID(session['user_id'])
+
+    return render_template('profile.html', user=pro)
 
 @app.route('/Articles')
 def article():
