@@ -4,7 +4,7 @@ import time
 
 from flask import Flask, render_template, request, flash, url_for, jsonify, session, redirect
 import pymysql
-from datetime import datetime, date
+from datetime import datetime
 
 from requests import HTTPError
 from werkzeug.utils import secure_filename

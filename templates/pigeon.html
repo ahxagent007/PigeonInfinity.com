@@ -233,7 +233,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 ftco-animate">
-                    <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}});">
+                    <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+pigeon['MainPic'])}});">
                         <a href="{{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}}" class="icon image-popup d-flex justify-content-center align-items-center">
                             <span class="fa fa-expand"></span>
                         </a>
@@ -241,7 +241,7 @@
                   </div>
                 {% for pics in pigeon['AllPic'] %}
                   <div class="col-md-4 ftco-animate">
-                    <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/'+pics)}});">
+                    <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+pics)}});">
                         <a href="{{url_for('static', filename='UPLOADS/'+pics)}}" class="icon image-popup d-flex justify-content-center align-items-center">
                             <span class="fa fa-expand"></span>
                         </a>
@@ -256,7 +256,7 @@
     <div class="container">
     		<div class="row">
     			<div class="col-lg-12">
-    				<div class="img img-video d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url({{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}}); height: 300px;">
+    				<div class="img img-video d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url({{url_for('static', filename='UPLOADS/AUCTION/'+pigeon['MainPic'])}}); height: 300px;">
     					<a href="{{pigeon['vdoLink']}}" class="icon-video popup-vimeo d-flex justify-content-center align-items-center">
     						<span class="fa fa-play"></span>
     					</a>
@@ -276,7 +276,7 @@
             {% for all_pgs in auc_pgs %}
                 <div class="col-md-4 ftco-animate">
                     <div class="blog-entry align-self-stretch">
-                      <a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+all_pgs['MainPic'])}});">
+                      <a href="/Auction/Pigeon/{{all_pgs['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+all_pgs['MainPic'])}});">
                       </a>
                       <div class="text p-4">
                         <div class="meta mb-2">

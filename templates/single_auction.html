@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block body %}
-    <section class="hero-wrap hero-wrap-2" style="background-image: url({{url_for('static', filename='UPLOADS/'+auc['MainPicture'])}});" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+auc['MainPicture'])}});" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text align-items-end">
@@ -89,7 +89,7 @@
           {% for p in pgs %}
           <div class="col-md-4 ftco-animate">
             <div class="blog-entry align-self-stretch">
-              <a href="Pigeon/{{p['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/'+p['MainPic'])}});">
+              <a href="Pigeon/{{p['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+p['MainPic'])}});">
               </a>
               <div class="text p-4">
                 <div class="meta mb-2">

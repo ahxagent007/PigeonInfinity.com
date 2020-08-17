@@ -16,7 +16,7 @@
 
 {% block body %}
 
-    <section class="hero-wrap hero-wrap-2" style="background-image: url('/static/UPLOADS/{{article['picture']}}');" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/static/UPLOADS/ARTICLE/{{article['picture']}}');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text align-items-end">
@@ -31,7 +31,7 @@
         <div class="container">
             <p style="padding:20px;">{{article['para1']}}</p>
             <div>
-                <img src="{{url_for('static',filename='UPLOADS/'+article['picture'])}}" class="img">
+                <img src="{{url_for('static',filename='UPLOADS/ARTICLE/'+article['picture'])}}" class="img">
                 
             </div>
 
