@@ -34,8 +34,8 @@
 						<p class="mb-0 phone pl-md-2">
 							<a href="#" class="mr-2"><span class="fa fa-phone mr-1"></span> +88 01673398900</a>
                             {% if session['user_id'] %}
-                                <a href="{{url_for('logout')}}"><span class="fa fa-paper-plane mr-1"></span> Logout</a>
-                                <a href="{{url_for('profile')}}"><span class="fa fa-paper-plane mr-1"></span>{{session['name']}}</a>
+                                <a href="{{url_for('logout')}}"><span class="fa fa-sign-out mr-1"></span> Logout</a>
+                                <a href="{{url_for('profile')}}"><span class="fa fa-user mr-1"></span>{{session['name']}}</a>
                             {% else %}
                                 <a href="{{url_for('login')}}"><span class="fa fa-paper-plane mr-1"></span> Login</a>
                             {% endif %}

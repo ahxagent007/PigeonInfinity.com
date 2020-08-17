@@ -1,9 +1,6 @@
 import hashlib
-import json
-import sys
 import os
 import time
-from http.client import HTTPException
 
 from flask import Flask, render_template, request, flash, url_for, jsonify, session, redirect
 import pymysql
@@ -11,9 +8,6 @@ from datetime import datetime, date
 
 from requests import HTTPError
 from werkzeug.utils import secure_filename
-
-import pytz
-from pytz import timezone
 
 UPLOAD_FOLDER = 'static/UPLOADS/'
 ALLOWED_EXTENSIONS = { 'png', 'jpg'}  # {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -29,79 +23,21 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 ####################### DATABASE ###############################
 class DatabaseByPyMySQL:
     def __init__(self):
-        host = "localhost"
-        user = "root" # pigemkwh_PI
-        password = "" #  QT^SiM(9]#gJ
-        db = "flask_pigeon_infinity" # pigemkwh_pigeon_infinity
+        host = "104.219.248.46"
+        user = "pigemkwh_PI"
+        password = "!;KgfeFDnFKX"
+        db = "pigemkwh_pigeon_infinity"
 
         self.conection = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.DictCursor)
         self.cursor = self.conection.cursor()
 
-    '''def addSome(self):
-      self.cursor.execute("INSERT INTO demo VALUES(" + str(32154) + "," + str(85746) + ");")
-      self.conection.commit()
-      print("DATA ADDED")
-
-       def getSome(self):
-          self.cursor.execute("SELECT * from demo;")
-          data = self.cursor.fetchall()
-          print(data)'''
-
-
-    def SearchAnimal(self,searchText):
-        sql_qry = 'SELECT * FROM animal WHERE AnimalCategory LIKE "%{0}%" OR AnimalTAG LIKE "%{0}%" OR AnimalOwner LIKE "%{0}%" OR AnimalBreed LIKE "%{0}%";'.format(searchText)
-        self.cursor.execute(sql_qry)
-        data = self.cursor.fetchall()
-
-        print('SearchAnimal : ', str(data), flush=True)
-
-        if len(data) > 0:
-            return data, True
-        else:
-            return data, False
-
-    def addAnimal(self, AnimalCategory, AnimalBreed, AnimalSex, AnimalOwner, AnimalAge,
-                  AnimalFather, AnimalMother, AnimalPictureName):
-
-        try:
-            last_id, sts = self.getAnimalLastID()
-            print('last ID = ' + str(last_id), flush=True)
-            animal_id = int(last_id) + 1
-            animal_tag = AnimalCategory[0:2]+'-'+AnimalBreed[0:3]+'-'+str(animal_id)
-
-
-            # current date and time
-            now = datetime.now()
-
-            addedDate = str(now.strftime("%Y-%m-%d %H:%M:%S"))
-
-            # Adding
-            sql1 = 'INSERT INTO animal(AnimalID, AnimalTag, AnimalCategory, AnimalBreed, AnimalSex, AnimalOwner, AnimalAge, AnimalFather, AnimalMother, AnimalStatus, AddedDate, UpdatedDate, AnimalPictureName)' \
-                   ' VALUES({0},"{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}","ALIVE","{9}","{9}","{10}");'.format(animal_id, animal_tag, AnimalCategory, AnimalBreed, AnimalSex,
-                                                                                                                    AnimalOwner, AnimalAge, AnimalFather, AnimalMother, addedDate, AnimalPictureName)
-            print(sql1, flush=True)
-            self.cursor.execute(sql1)
-            self.conection.commit()
-
-            self.updateCommonData(AnimalCategory, 'ADD')
-
-            return True
-
-        except:
-            print('Error on addAnimal()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
-            return False
-
-#####################
 
     def isEmailExist(self, email, phone):
         self.cursor.execute('SELECT * FROM user WHERE email = "{0}" OR phone = "{1}";'.format(email, phone))
         data = self.cursor.fetchall()
         if len(data) > 0:
-            print('EMAIL EXIST', flush=True)
             return True
         else:
-            print('EMAIL DO NOT EXIST', flush=True)
             return False
 
     def getUserByEmail(self, email):
@@ -138,7 +74,6 @@ class DatabaseByPyMySQL:
             return data, False
 
     def Login(self, Email, Pass):
-        print(Email, Pass, flush=True)
         if self.isEmailExist(Email):
             user, sts = self.getUserByEmail(Email)
             if user['UserPass'] == Pass:
@@ -149,7 +84,6 @@ class DatabaseByPyMySQL:
             return 'NULL','NULL', False
 
     def LoginAdmin(self, Email, Pass):
-        print(Email, Pass, flush=True)
 
         user, sts = self.getAdminByEmail(Email)
 
@@ -159,8 +93,6 @@ class DatabaseByPyMySQL:
             return 'NULL', False
 
     def Register(self, Name, Address, DOB, NID, Email, Phone, Pass, ref):
-
-        print(Name, Address, DOB, NID, Email, Phone, Pass, ref)
 
         if not self.isEmailExist(Email, Phone):
             # current date and time
@@ -172,7 +104,6 @@ class DatabaseByPyMySQL:
             sql = 'INSERT INTO user (name, phone, email, password, address, register_date, dob, nid, reference)' \
                    ' VALUES("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}", "{8}");'\
                     .format(Name, Phone, Email, Pass, Address, nowDate, DOB, NID, ref)
-            print(sql)
             self.cursor.execute(sql)
             self.conection.commit()
             return 'REGISTRATION COMPLETE, PLEASE LOGIN'
@@ -183,34 +114,31 @@ class DatabaseByPyMySQL:
 
         try:
             # Adding
-            sql1 = 'INSERT INTO AuctionEvent(AuctionName, AuctionDetails, TotalPigeon, AuctionStart, AuctionEnd, MainPicture, Currency)' \
+            sql1 = 'INSERT INTO auctionevent(AuctionName, AuctionDetails, TotalPigeon, AuctionStart, AuctionEnd, MainPicture, Currency)' \
                    ' VALUES("{0}","{1}",{2},"{3}","{4}","{5}","BDT");'.format(auctionName, details, pigeon,
                                                                               auctionStart, auctionEnd, filename)
-            print(sql1, flush=True)
             self.cursor.execute(sql1)
             self.conection.commit()
             return True
 
         except:
-            print('Error on addAuctionEvent()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
     def addPigeon(self, AuctionID, PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, filename, otherPics, vdo):
-        print(otherPics)
+        ##(otherPics)
         try:
             # Adding
-            sql1 = 'INSERT INTO Pigeon(AuctionID, PigeonRing, PigeonName, Price, MainPic, AllPic, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, StartTime, EndTime, vdoLink)' \
+            sql1 = 'INSERT INTO pigeon(AuctionID, PigeonRing, PigeonName, Price, MainPic, AllPic, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, StartTime, EndTime, vdoLink)' \
                    ' VALUES({0},"{1}","{2}",{3},"{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}", "{13}");'\
                 .format(AuctionID, PigeonRing, PigeonName, StartingPrice, filename, otherPics, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, AuctionStart, AuctionEnd, vdo)
-            print(sql1, flush=True)
+            #(sql1, flush=True)
             self.cursor.execute(sql1)
             self.conection.commit()
             return True
 
         except:
-            print('Error on addPigeon()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on addPigeon()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
     def getLastAuction(self):
@@ -218,7 +146,7 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getLastAuction : ', str(data), flush=True)
+        #('getLastAuction : ', str(data), flush=True)
 
         if len(data)>0:
             return data[0], True
@@ -249,7 +177,7 @@ class DatabaseByPyMySQL:
             return data, False
 
     def getTotalAmountByAuctionID(self, ID):
-        sql_qry = 'SELECT SUM(price) as Total , COUNT(PigeonID)as Pigeons FROM Pigeon WHERE AuctionID = {0};'.format(ID)
+        sql_qry = 'SELECT SUM(price) as Total , COUNT(PigeonID)as Pigeons FROM pigeon WHERE AuctionID = {0};'.format(ID)
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
@@ -260,7 +188,7 @@ class DatabaseByPyMySQL:
             return data
 
     def getTotalBidsByAuctionID(self, ID):
-        sql_qry = 'SELECT COUNT(BidID)as Bids FROM Bid WHERE AuctionID = {0};'.format(ID)
+        sql_qry = 'SELECT COUNT(BidID)as Bids FROM bid WHERE AuctionID = {0};'.format(ID)
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
@@ -274,7 +202,7 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getAuctionByID : ', str(data[0]), flush=True)
+        #('getAuctionByID : ', str(data[0]), flush=True)
 
         if len(data) > 0:
             return data[0], True
@@ -286,7 +214,7 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getPigeonsByAuctionID : ', str(data), flush=True)
+        #('getPigeonsByAuctionID : ', str(data), flush=True)
 
         if len(data) > 0:
             return data, True
@@ -298,7 +226,7 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getPigeonsByAuctionID : ', str(data), flush=True)
+        #('getPigeonsByAuctionID : ', str(data), flush=True)
 
         if len(data) > 0:
             return data[0], True
@@ -314,7 +242,7 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getBids : ', str(data), flush=True)
+        #('getBids : ', str(data), flush=True)
 
         if len(data) > 0:
             return data, True
@@ -326,7 +254,7 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getPigeonsByAuctionID : ', str(data), flush=True)
+        #('getPigeonsByAuctionID : ', str(data), flush=True)
 
         if len(data) > 0:
             return data[0], True
@@ -342,7 +270,7 @@ class DatabaseByPyMySQL:
         self.cursor.execute(sql_qry)
         data = self.cursor.fetchall()
 
-        print('getLatestBids : ', str(data), flush=True)
+        #('getLatestBids : ', str(data), flush=True)
 
         if len(data) > 0:
             return data, True
@@ -354,21 +282,21 @@ class DatabaseByPyMySQL:
             # Adding
             sql = 'INSERT INTO bid(UserID, PigeonID, AuctionID, BidAmount, BidTimeDate)' \
                    ' VALUES({0},{1},{2},{3},"{4}");'.format(userID, pigeonID, auctionID, amount, bidTime)
-            print(sql, flush=True)
+            #(sql, flush=True)
             self.cursor.execute(sql)
             self.conection.commit()
 
             sql2 = 'UPDATE pigeon ' \
                    'SET Price = {0}, LastBidderID = {1}, LastBidderName = "{2}" ' \
                    'WHERE PigeonID = {3}'.format(amount, userID, name, pigeonID)
-            print(sql2, flush=True)
+            #(sql2, flush=True)
             self.cursor.execute(sql2)
             self.conection.commit()
             return True
 
         except:
-            print('Error on placeBid()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on placeBid()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
     def updatePigeonTime(self, pigeonID, auc_ID, Time):
@@ -377,21 +305,21 @@ class DatabaseByPyMySQL:
             sql = 'UPDATE pigeon ' \
                    'SET EndTime = "{0}" ' \
                    'WHERE PigeonID = {1}'.format(Time, pigeonID)
-            print(sql, flush=True)
+            #(sql, flush=True)
             self.cursor.execute(sql)
             self.conection.commit()
 
             sql2 = 'UPDATE auctionEvent ' \
                    'SET AuctionEnd = "{0}" ' \
                    'WHERE AuctionID = {1}'.format(Time, auc_ID)
-            print(sql2, flush=True)
+            #(sql2, flush=True)
             self.cursor.execute(sql2)
             self.conection.commit()
             return True
 
         except:
-            print('Error on updatePigeonTime()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on updatePigeonTime()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
     def getSetting(self, page):
@@ -432,13 +360,13 @@ class DatabaseByPyMySQL:
             sql = 'UPDATE user ' \
                    'SET bid_limit = bid_limit+{0}*.2, bid_point = bid_point+1, total_bid_amount = total_bid_amount+{1} ' \
                    'WHERE user_id = {2}'.format(amount, amount, userID)
-            print(sql, flush=True)
+            #(sql, flush=True)
             self.cursor.execute(sql)
             self.conection.commit()
             return True
         except:
-            print('Error on updateUserPoint()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on updateUserPoint()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
     def updateUserPic(self, userID, pic):
@@ -447,13 +375,13 @@ class DatabaseByPyMySQL:
                    'SET pro_pic = "{0}" ' \
                    'WHERE user_id = {1}'.format(pic, userID)
 
-            print(sql, flush=True)
+            #(sql, flush=True)
             self.cursor.execute(sql)
             self.conection.commit()
             return True
         except:
-            print('Error on updateUserPic()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on updateUserPic()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
 
@@ -506,15 +434,15 @@ class DatabaseByPyMySQL:
             sql = 'UPDATE user ' \
                    'SET status = "VERIFIED", approvedBy = "{0}" ' \
                    'WHERE user_id = {1}'.format(adminName, userID)
-            print(sql, flush=True)
+            #(sql, flush=True)
             self.cursor.execute(sql)
             self.conection.commit()
 
             return True
 
         except:
-            print('Error on verifyMember()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on verifyMember()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
     def unverifyMember(self, userID, adminName):
@@ -523,15 +451,15 @@ class DatabaseByPyMySQL:
             sql = 'UPDATE user ' \
                    'SET status = "UNVERIFIED", approvedBy = "{0}" ' \
                    'WHERE user_id = {1}'.format(adminName, userID)
-            print(sql, flush=True)
+            #(sql, flush=True)
             self.cursor.execute(sql)
             self.conection.commit()
 
             return True
 
         except:
-            print('Error on unverifyMember()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on unverifyMember()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
     def addArticle(self, title, para1, para2, auth, filename):
@@ -539,14 +467,14 @@ class DatabaseByPyMySQL:
         try:
             sql1 = 'INSERT INTO article (title, para1, para2, auth, picture)' \
                    ' VALUES("{0}","{1}","{2}","{3}","{4}");'.format(title, para1, para2, auth, filename)
-            print(sql1, flush=True)
+            #(sql1, flush=True)
             self.cursor.execute(sql1)
             self.conection.commit()
             return True
 
         except:
-            print('Error on addArticle()', flush=True)
-            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            #('Error on addArticle()', flush=True)
+            #('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
 ###############################################################
@@ -640,7 +568,7 @@ def registration():
             else:
                 return render_template('register.html', error='PASSWORD NOT MATCH', userData=userData)
         except HTTPError:
-            print('Exception : ' + str(HTTPException), flush=True)
+            #('Exception : ' + str(HTTPException), flush=True)
             return render_template('register.html', error='PLEASE FILL UP CORRECTLY', userData=userData)
 
 
@@ -815,7 +743,7 @@ def Bid():
                         if (aucMilliSec-curMilliSec) < 600000:
                             s = (aucMilliSec + 900000) / 1000.0
                             updatedDate = datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M:%S')
-                            print('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
+                            #('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
                             DB.updatePigeonTime(pigeonID, auctionID, updatedDate)
 
                             status = 'Your bid placed successfully! Time Increased!'
@@ -836,7 +764,7 @@ def Bid():
                 if (aucMilliSec - curMilliSec) < 600000:
                     s = (aucMilliSec + 900000) / 1000.0
                     updatedDate = datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M:%S')
-                    print('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
+                    #('AucTime ' + pign['EndTime'] + ' Updated Time ' + updatedDate)
 
                     DB.updatePigeonTime(pigeonID, auctionID, updatedDate)
                     status = 'Your bid placed successfully! Time Increased!'
@@ -848,15 +776,15 @@ def Bid():
     else:
         status = 'Sorry, Auction Ended'
 
-    print(status)
+    #(status)
     data = {'status':status}
 
     return jsonify(data)
 
 @app.route("/getTime", methods=['GET'])
 def getTime():
-    print("browser time: ", request.args.get("time"))
-    print("server time : ", time.strftime('%A %B, %d %Y %H:%M:%S'))
+    #("browser time: ", request.args.get("time"))
+    #("server time : ", time.strftime('%A %B, %d %Y %H:%M:%S'))
     return "Done"
 
 @app.route('/Profile')
@@ -881,7 +809,7 @@ def profile_edit():
             file = request.files['pro_pic']
 
             if file.filename == '':
-                print('No selected file', flush=True)
+                #('No selected file', flush=True)
                 return render_template('profile_edit.html', error='Only allow png, jpg formats')
 
             if file and allowed_file(file.filename):
@@ -889,16 +817,16 @@ def profile_edit():
                 filename = str(session['user_id']) + filename[-4:]
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-                print(filename, flush=True)
+                #(filename, flush=True)
 
                 db = DatabaseByPyMySQL()
                 status = db.updateUserPic(session['user_id'], filename)
 
-                print(str(status), flush=True)
+                #(str(status), flush=True)
                 return redirect(url_for('profile'))
 
         except HTTPError:
-            print('Exception : ' + str(HTTPException), flush=True)
+            #('Exception : ' + str(HTTPException), flush=True)
             return render_template('profile_edit.html', error='SOMETHING NOT RIGHT')
 
     return render_template('profile_edit.html')
@@ -1009,13 +937,13 @@ def admin_add_auction():
     if request.method == 'POST':
         try:
             if 'auction_image' not in request.files:
-                print('No file part', flush=True)
+                #('No file part', flush=True)
                 return render_template('admin_add_auction.html', error='No picture selected')
             file = request.files['auction_image']
             # if user does not select file, browser also
             # submit an empty part without filename
             if file.filename == '':
-                print('No selected file', flush=True)
+                #('No selected file', flush=True)
                 return render_template('admin_add_auction.html', error='Only allow png, jpg formats')
 
             if file and allowed_file(file.filename):
@@ -1023,7 +951,7 @@ def admin_add_auction():
                 filename = str(current_milli_time()) + filename[-4:]
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-                print(filename, flush=True)
+                #(filename, flush=True)
 
                 try:
                     auctionName = request.form['auctionName']
@@ -1036,10 +964,10 @@ def admin_add_auction():
                     endTime = request.form['endTime']
 
 
-                    print('TIMES = ', startDate, startTime, endDate, endTime)
+                    #('TIMES = ', startDate, startTime, endDate, endTime)
                 except:
                     return render_template('admin_add_auction.html', error='Missing information')
-                    print('Error = ', str(sys.exc_info()[0]), flush=True)
+                    #('Error = ', str(sys.exc_info()[0]), flush=True)
 
                 auctionStart = startDate + ' '+ startTime
                 auctionEnd = endDate + ' '+ endTime
@@ -1050,7 +978,7 @@ def admin_add_auction():
                 db = DatabaseByPyMySQL()
                 status = db.addAuctionEvent(auctionName, pigeon, details, auctionStart, auctionEnd, filename)
 
-                print(str(status), flush=True)
+                #(str(status), flush=True)
 
                 if status:
                     auc,sts = db.getLastAuction()
@@ -1064,8 +992,8 @@ def admin_add_auction():
                     return render_template('admin_add_auction.html', error='Something went wrong')
 
         except HTTPError:
-            print('Exception : ' + str(HTTPException), flush=True)
-            return render_template('admin_add_auction.html', error='PLEASE FILL UP CORRECTLY', userData=userData)
+            #('Exception : ' + str(HTTPException), flush=True)
+            return render_template('admin_add_auction.html', error='PLEASE FILL UP CORRECTLY')
 
     return render_template('admin_add_auction.html')
 
@@ -1087,15 +1015,13 @@ def admin_add_auction_pigeons():
         for i in range(int(session['totalPigeon'])):
             try:
                 if 'PigeonMainPic'+str(i+1) not in request.files:
-                    print('No file part PigeonMainPic'+str(i+1), flush=True)
-                    for d in request.files:
-                        print(d)
+                    #('No file part PigeonMainPic'+str(i+1), flush=True)
                     return render_template('admin_add_auction_pigeons.html', error='No picture selected', data = data)
                 file = request.files['PigeonMainPic'+str(i+1)]
                 # if user does not select file, browser also
                 # submit an empty part without filename
                 if file.filename == '':
-                    print('No selected file', flush=True)
+                    #('No selected file', flush=True)
                     return render_template('admin_add_auction_pigeons.html', error='Only allow png, jpg formats', data = data)
 
                 if file and allowed_file(file.filename):
@@ -1104,7 +1030,7 @@ def admin_add_auction_pigeons():
                     filename =  cur_mili + filename[-4:]
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-                    print('PigeonOthersPics'+str(i+1)+' :: '+filename, flush=True)
+                    #('PigeonOthersPics'+str(i+1)+' :: '+filename, flush=True)
 
                     files = request.files.getlist('PigeonOthersPics'+str(i+1))
                     imNo = 0
@@ -1114,7 +1040,7 @@ def admin_add_auction_pigeons():
                         finame = cur_mili +str(imNo)+ finame[-4:]
                         imNo += 1
                         fi.save(os.path.join(app.config['UPLOAD_FOLDER'], finame))
-                        print('PigeonMainPic' + str(i+1) + ' :: ' + finame, flush=True)
+                        #('PigeonMainPic' + str(i+1) + ' :: ' + finame, flush=True)
                         otherPics.append(finame)
                     try:
                         PigeonRing = request.form['PigeonRing'+str(i+1)]
@@ -1129,14 +1055,14 @@ def admin_add_auction_pigeons():
 
                     except:
                         return render_template('admin_add_auction_pigeons.html', error='Missing information', data = data)
-                        print('Error = ', str(sys.exc_info()[0]), flush=True)
+                        #('Error = ', str(sys.exc_info()[0]), flush=True)
 
                     db = DatabaseByPyMySQL()
                     status = db.addPigeon(session['AuctionID'], PigeonRing, PigeonName, StartingPrice, PigeonGender, PigeonColor, BreedBy, OfferBy, PigeonDetails, session['AuctionStart'], session['AuctionEnd'], filename, otherPics, vdo)
-                    print(str(status), flush=True)
+                    #(str(status), flush=True)
 
             except HTTPError:
-                print('Exception : ' + str(HTTPException), flush=True)
+                #('Exception : ' + str(HTTPException), flush=True)
                 return render_template('admin_add_auction_pigeons.html', error='SOMETHING WENT WRONG', data = data)
 
         return redirect(url_for('admin_auction'))
@@ -1164,12 +1090,14 @@ def admin_member_unverified():
     if request.method == 'POST':
         try:
             user_id = request.form['verify']
-            print(user_id)
+            #(user_id)
             DB.verifyMember(user_id, session['admin'])
             return redirect(url_for('admin_member_unverified'))
 
         except HTTPError:
-            print('Exception : ' + str(HTTPException), flush=True)
+            #('Exception : ' + str(HTTPException), flush=True)
+            return redirect(url_for('admin_member_unverified'))
+
 
     return render_template('admin_member_unverified.html', members=members)
 
@@ -1184,12 +1112,13 @@ def admin_member_verified():
     if request.method == 'POST':
         try:
             user_id = request.form['unverify']
-            print(user_id)
+            #(user_id)
             DB.unverifyMember(user_id, session['admin'])
             return redirect(url_for('admin_member_verified'))
 
         except HTTPError:
-            print('Exception : ' + str(HTTPException), flush=True)
+            #('Exception : ' + str(HTTPException), flush=True)
+            return redirect(url_for('admin_member_verified'))
 
     return render_template('admin_member_verified.html', members=members)
 
@@ -1202,13 +1131,13 @@ def admin_article():
     if request.method == 'POST':
         try:
             if 'pic' not in request.files:
-                print('No file part', flush=True)
+                #('No file part', flush=True)
                 return render_template('admin_article.html', error='No picture selected')
             file = request.files['pic']
             # if user does not select file, browser also
             # submit an empty part without filename
             if file.filename == '':
-                print('No selected file', flush=True)
+                #('No selected file', flush=True)
                 return render_template('admin_article.html', error='Only allow png, jpg formats')
 
             if file and allowed_file(file.filename):
@@ -1216,7 +1145,7 @@ def admin_article():
                 filename = str(current_milli_time()) + filename[-4:]
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-                print(filename, flush=True)
+                #(filename, flush=True)
 
                 try:
                     title = request.form['title']
@@ -1225,17 +1154,17 @@ def admin_article():
 
                 except:
                     return render_template('admin_article.html', error='Missing information')
-                    print('Error = ', str(sys.exc_info()[0]), flush=True)
+                    #('Error = ', str(sys.exc_info()[0]), flush=True)
 
 
                 db = DatabaseByPyMySQL()
                 status = db.addArticle(title, para1, para2, session['admin'], filename)
 
-                print(str(status), flush=True)
+                #(str(status), flush=True)
             return render_template('admin_article.html', error='Article added')
 
         except HTTPError:
-            print('Exception : ' + str(HTTPException), flush=True)
+            #('Exception : ' + str(HTTPException), flush=True)
             return render_template('admin_article.html', error='PLEASE FILL UP CORRECTLY')
 
 
@@ -1254,6 +1183,7 @@ def computeMD5hash(my_string):
     m.update(my_string.encode('utf-8'))
     return m.hexdigest()
 
+
 if __name__ == '__main__':
     app.debug = True
-    app.run(debug=True)
+    app.run()

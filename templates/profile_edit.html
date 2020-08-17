@@ -1,0 +1,65 @@
+{% extends 'base_main.html' %}
+{% block title %}
+    <title>Pigeon Infinity</title>
+{% endblock %}
+{% block menu %}
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="{{url_for('auction')}}" class="nav-link">Auction</a></li>
+        <li class="nav-item"><a href="{{url_for('article')}}" class="nav-link">Articles</a></li>
+        <li class="nav-item"><a href="{{url_for('club')}}" class="nav-link">Clubs</a></li>
+        <li class="nav-item"><a href="{{url_for('buy')}}" class="nav-link">Buy Now</a></li>
+        <li class="nav-item"><a href="{{url_for('contact')}}" class="nav-link">Contact</a></li>
+        <li class="nav-item"><a href="{{url_for('about')}}" class="nav-link">About</a></li>
+    </ul>
+{% endblock %}
+
+{% block body %}
+    <section class="ftco-section bg-light">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-6 text-center mb-5">
+				<h2 class="heading-section">Edit Profile</h2>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-md-12">
+				<div class="wrapper">
+
+					<div class="row no-gutters">
+						<div class="col-md-12">
+							<div class="contact-wrap w-100 p-md-5 p-4">
+								<h3 class="mb-4">User Profile Picture</h3>
+								{% if error != ' ' %}
+									<h5 class="mb-4">{{error}}</h5>
+								{% endif %}
+								<form action="{{url_for('profile_edit')}}" method="POST" id="contactForm" name="contactForm" class="contactForm" enctype=multipart/form-data>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="label">Select Profile Picture</label><br>
+												<input name="pro_pic" type="file" accept="image/*" id="auction_image"/>
+											</div>
+										</div>
+
+										<div class="col-md-12">
+											<div class="form-group">
+												<input type="submit" value="Done" class="btn btn-primary">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+
+{% block custom_js %}
+
+{% endblock %}

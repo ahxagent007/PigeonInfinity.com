@@ -28,7 +28,7 @@
     <!-- ============================================================== -->
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
-            <h5 class="card-header">Member List</h5>
+            <h5 class="card-header">Verified Member List</h5>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered first">
@@ -48,13 +48,13 @@
                         <tbody>
                         {% for mem in members %}
                             <tr>
-                                <td>{{mem['name']}}</td>
+                                <td><a href="/Profile/{{mem['user_id']}}">{{mem['name']}}</a></td>
                                 <td>{{mem['email']}}::{{mem['phone']}}</td>
                                 <td>{{mem['address']}}</td>
                                 <td>{{mem['nid']}}::{{mem['dob']}}</td>
                                 <td>{{mem['reference']}}</td>
                                 <td>{{mem['approvedBy']}}</td>
-                                <td>{{mem['lastLogin']}}</td>
+                                <td>{{mem['last_login']}}</td>
                                 <td>{{mem['ip_address']}}</td>
                                 <td><form action="{{url_for('admin_member_verified')}}" method="post">
                                     <button class="btn btn-danger" name="unverify" value="{{mem['user_id']}}">Unverify</button>

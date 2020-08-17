@@ -45,7 +45,7 @@
                         <tbody>
                         {% for mem in members %}
                             <tr>
-                                <td>{{mem['name']}}</td>
+                                <td><a href="/Profile/{{mem['user_id']}}">{{mem['name']}}</a></td>
                                 <td>{{mem['email']}} :: {{mem['phone']}}</td>
                                 <td>{{mem['address']}}</td>
                                 <td>{{mem['nid']}}</td>
