@@ -128,6 +128,9 @@
             let formattedTime = Date.parse(endingTime);
             let auctionEndDateTime = new Date(formattedTime);
             let aucEndsMilis = auctionEndDateTime.getTime();
+
+            let auctionEndDateTime = DateTime.fromFormat(endingTime, 'y-MM-dd HH:mm:ss',{zone: 'Asia/Dhaka'});
+            let aucEndsMilis = auctionEndDateTime.toMillis();
             //console.log(endingTime+' '+aucEndsMilis);
 
             endsIn = aucEndsMilis - nowMilis;
@@ -158,8 +161,11 @@
 
             //console.log(nowMilis);
 
-            let auctionEndDateTime = new Date(endingTime);
-            let aucEndsMilis = auctionEndDateTime.getTime();
+            //let auctionEndDateTime = new Date(endingTime);
+            //let aucEndsMilis = auctionEndDateTime.getTime();
+
+            let auctionEndDateTime = DateTime.fromFormat(endingTime, 'y-MM-dd HH:mm:ss',{zone: 'Asia/Dhaka'});
+            let aucEndsMilis = auctionEndDateTime.toMillis();
             //console.log(aucEndsMilis);
 
             endsIn = aucEndsMilis - nowMilis;
@@ -220,10 +226,6 @@
         }else{
             console.log('Auction Ended');
         }
-        
-
-
-
 
 </script>
 {% endblock %}

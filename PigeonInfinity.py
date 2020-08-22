@@ -3,7 +3,7 @@ import os
 import time
 import sys
 
-from flask import Flask, render_template, request, flash, url_for, jsonify, session, redirect
+from flask import Flask, render_template, request, url_for, jsonify, session, redirect
 import pymysql
 from datetime import datetime
 
@@ -500,6 +500,21 @@ class DatabaseByPyMySQL:
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
+    def addError(self, error):
+
+        try:
+            sql1 = 'INSERT INTO errorlog (error)' \
+                   ' VALUES("{0}");'.format(error)
+            print(sql1, flush=True)
+            self.cursor.execute(sql1)
+            self.conection.commit()
+            return True
+
+        except:
+            print('Error on addError()', flush=True)
+            print('Error = ', str(sys.exc_info()[0]), flush=True)
+            return False
+
 ###############################################################
 
 @app.route('/')
@@ -603,6 +618,7 @@ def allowed_file(filename):
 
 @app.route('/Auction')
 def auction():
+    os.environ['TZ'] = 'Asia/Dhaka'
     DB = DatabaseByPyMySQL()
     data, sts = DB.getAllAuctions()
 
@@ -645,13 +661,13 @@ def auction():
 
 @app.route('/Auction/<auction_no>')
 def single_auction(auction_no):
+    os.environ['TZ'] = 'Asia/Dhaka'
 
     DB = DatabaseByPyMySQL()
     auc,sts = DB.getAuctionByID(auction_no)
     pgs, sts = DB.getPigeonsByAuctionID(auction_no)
 
     curTime = time.strftime('%Y-%m-%d %H:%M:%S')
-
     dt_obj = datetime.strptime(curTime, '%Y-%m-%d %H:%M:%S')
     curMilliSec = dt_obj.timestamp() * 1000
 
@@ -737,11 +753,12 @@ def Bid():
         data = {'status': status}
         return jsonify(data)
 
+    os.environ['TZ'] = 'Asia/Dhaka'
+
     pign, stsa = DB.getPigeonByID(pigeonID)
 
     curTime = time.strftime('%Y-%m-%d %H:%M:%S')
-    dt_obj = datetime.strptime(curTime,
-                               '%Y-%m-%d %H:%M:%S')
+    dt_obj = datetime.strptime(curTime,'%Y-%m-%d %H:%M:%S')
     curMilliSec = dt_obj.timestamp() * 1000
 
     aucTime_obj = datetime.strptime(pign['EndTime'],

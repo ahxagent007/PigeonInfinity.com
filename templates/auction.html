@@ -120,11 +120,14 @@
 
             let DateTime = luxon.DateTime;
             let now = DateTime.local().setZone('Asia/Dhaka')        
-            let nowMilis = now. toMillis();
+            let nowMilis = now.toMillis();
 
 
-            let auctionEndDateTime = new Date(endingTime);
-            let aucEndsMilis = auctionEndDateTime.getTime();
+            //let auctionEndDateTime = new Date(endingTime);
+            //let aucEndsMilis = auctionEndDateTime.getTime();
+
+            let auctionEndDateTime = DateTime.fromFormat(endingTime, 'y-MM-dd HH:mm:ss',{zone: 'Asia/Dhaka'});
+            let aucEndsMilis = auctionEndDateTime.toMillis();
 
             endsIn = aucEndsMilis - nowMilis;
 
@@ -160,11 +163,14 @@
 
             let DateTime = luxon.DateTime;
             let now = DateTime.local().setZone('Asia/Dhaka')        
-            let nowMilis = now. toMillis();
+            let nowMilis = now.toMillis();
 
 
-            let auctionStartDateTime = new Date(startTime);
-            let aucStartsMilis = auctionStartDateTime.getTime();
+            //let auctionStartDateTime = new Date(startTime);
+            //let aucStartsMilis = auctionStartDateTime.getTime();
+
+            let auctionStartDateTime = DateTime.fromFormat(startTime, 'y-MM-dd HH:mm:ss',{zone: 'Asia/Dhaka'});
+            let aucStartsMilis = auctionStartDateTime.toMillis();
 
             startsIn = aucStartsMilis - nowMilis;
 
@@ -206,8 +212,8 @@
                     document.getElementById("ends"+runningAuc[i]['AuctionID']).innerHTML = endingTime;
                 }       
             
-                for(i=0; i<runningAuc.length; i++){                        
-                    startingTime = EndingTimeDiff(upcommingAuc[i]['AuctionEnd']);
+                for(i=0; i<upcommingAuc.length; i++){
+                    startingTime = StartingTimeDiff(upcommingAuc[i]['AuctionEnd']);
                     document.getElementById("starts"+upcommingAuc[i]['AuctionID']).innerHTML = startingTime;
                 }  
 

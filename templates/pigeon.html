@@ -21,7 +21,7 @@
     	<div class="container">
     		<div class="row d-flex no-gutters">
     			<div class="col-md-5 d-flex">
-    				<div class="img img-video d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url({{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}});">
+    				<div class="img img-video d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url({{url_for('static', filename='UPLOADS/AUCTION/'+pigeon['MainPic'])}});">
     				</div>
     			</div>
     			<div class="col-md-7 pl-md-5 py-md-5">
@@ -155,7 +155,7 @@
                                         {% for b in bid_list %}
                                             <tr>
                                                 <td>{{b['BidTimeDate']}}</td>
-                                                <td>{{b['name']}}</td>
+                                                <td><a href="/Profile/{{b['user_id']}}">{{b['name']}}</a></td>
                                                 <td>{{b['BidAmount']}}</td>
                                             </tr>
                                         {% endfor %}
@@ -398,8 +398,11 @@
 
             //console.log(nowMilis);
 
-            let auctionEndDateTime = new Date(endingTime);
-            let aucEndsMilis = auctionEndDateTime.getTime();
+            //let auctionEndDateTime = new Date(endingTime);
+            //let aucEndsMilis = auctionEndDateTime.getTime();
+
+            let auctionEndDateTime = DateTime.fromFormat(endingTime, 'y-MM-dd HH:mm:ss',{zone: 'Asia/Dhaka'});
+            let aucEndsMilis = auctionEndDateTime.toMillis();
             //console.log(aucEndsMilis);
 
             endsIn = aucEndsMilis - nowMilis;
