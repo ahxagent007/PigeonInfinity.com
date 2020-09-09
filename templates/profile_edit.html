@@ -33,7 +33,7 @@
 								{% if error != ' ' %}
 									<h5 class="mb-4">{{error}}</h5>
 								{% endif %}
-								<form action="{{url_for('profile_edit')}}" method="POST" id="contactForm" name="contactForm" class="contactForm" enctype=multipart/form-data>
+								<form action="http://localhost/PI/PHP/change_pro_pic.php" method="POST" id="contactForm" name="contactForm" class="contactForm" enctype=multipart/form-data>
 									<div class="row">
 										<div class="col-md-12">
 											<div class="form-group">
@@ -43,9 +43,7 @@
 										</div>
 
 										<div class="col-md-12">
-											<div class="form-group">
-												<input type="submit" value="Done" class="btn btn-primary">
-											</div>
+												<button type="submit" name="Done" value="{{session['user_id']}}"  class="btn btn-primary">Done</button>
 										</div>
 									</div>
 								</form>

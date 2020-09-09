@@ -27,7 +27,6 @@
       </div>
     </div>
 
-
     <section class="ftco-section bg-light ftco-no-pt ftco-intro">
     	<div class="container">
     		<div class="row">
@@ -38,8 +37,8 @@
               </div>
               <div class="media-body">
                 <h3 class="heading">Live Auctions</h3>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right.</p>
-                <a href="#" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
+                <p>For all auctions please visit our Auction section. Best pigeons are waiting for you.</p>
+                <a href="{{url_for('auction')}}" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
               </div>
             </div>
           </div>
@@ -50,8 +49,8 @@
               </div>
               <div class="media-body">
                 <h3 class="heading">Contact Us</h3>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right.</p>
-                <a href="#" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
+                <p>We are always available for your service. Please try contacting us for better experience.</p>
+                <a href="{{url_for('contact')}}" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
               </div>
             </div>
           </div>
@@ -61,17 +60,15 @@
             		<span><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
               </div>
               <div class="media-body">
-                <h3 class="heading">Fixed Buy</h3>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right.</p>
-                <a href="#" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
+                <h3 class="heading">Latest Auction</h3>
+                <p>See our latest auction in detail. With best quality birds we will not let you be disappointed at any cost.</p>
+                <a href="Auction/{{auc['AuctionID']}}" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
               </div>
             </div>
           </div>
         </div>
     	</div>
     </section>
-
-
 
     <section class="ftco-section ftco-no-pt ftco-no-pb">
     	<div class="container">
@@ -84,33 +81,40 @@
     				<div class="heading-section pt-md-5">
 	            <h2 class="mb-4">Why Pigeon Infinity ?</h2>
     				</div>
-    				<div class="row">
+                    <div>
+                        <p>
+                           What we present before you, is the future of Auctions in the subcontinent.
+                            We are establishing an unique platform for all fanciers. Everyone will have an opportunity in acquiring the highest quality birds available here.
+                            With years of experience in the sports, we are here for you with the kind of support you deserve! From selection of the very best, to the logistics and care. Pigeon Infinity is determined to make your dreams come true!
+                        </p>
+                    </div>
+                    <div class="row">
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-stethoscope"></span></div>
 	    					<div class="text pl-3">
-	    						<h4>Care Advices</h4>
-	    						<p>Far far away, behind the word mountains, far from the countries.</p>
+	    						<h4>Experienced Advices</h4>
+	    						<!--<p>Far far away, behind the word mountains, far from the countries.</p>-->
 	    					</div>
 	    				</div>
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-customer-service"></span></div>
 	    					<div class="text pl-3">
 	    						<h4>Customer Supports</h4>
-	    						<p>Far far away, behind the word mountains, far from the countries.</p>
+	    						<!--<p>Far far away, behind the word mountains, far from the countries.</p>-->
 	    					</div>
 	    				</div>
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-emergency-call"></span></div>
 	    					<div class="text pl-3">
 	    						<h4>Emergency Services</h4>
-	    						<p>Far far away, behind the word mountains, far from the countries.</p>
+	    						<!--<p>Far far away, behind the word mountains, far from the countries.</p>-->
 	    					</div>
 	    				</div>
 	    				<div class="col-md-6 services-2 w-100 d-flex">
 	    					<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-veterinarian"></span></div>
 	    					<div class="text pl-3">
-	    						<h4>Veterinary Help</h4>
-	    						<p>Far far away, behind the word mountains, far from the countries.</p>
+	    						<h4>Quality Auction</h4>
+	    						<!--<p>Far far away, behind the word mountains, far from the countries.</p>-->
 	    					</div>
 	    				</div>
 	    			</div>
@@ -181,13 +185,12 @@
         </div>
     </div>
 
-
-    <section class="ftco-section testimony-section" style="background-image: url('static/images/bg_2.jpg');">
+    <section class="ftco-section testimony-section" style="background-image: url('static/xian_img/index_heading.jpg');">
     	<div class="overlay"></div>
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
           <div class="col-md-7 heading-section text-center ftco-animate">
-            <h2>Pigeon Fanciers</h2>
+            <h2>Pigeon Infinity Team</h2>
           </div>
         </div>
         <div class="row ftco-animate">
