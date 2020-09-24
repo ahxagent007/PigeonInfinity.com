@@ -73,23 +73,23 @@
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
           <div class="col-md-7 heading-section text-center ftco-animate">
-            <h2>Pigeon Infinity Team</h2>
+            <h2>Pigeon Infinity Executives</h2>
           </div>
         </div>
         <div class="row ftco-animate">
           <div class="col-md-12">
             <div class="carousel-testimony owl-carousel ftco-owl">
-                {% for f in fanciers %}
+                {% for e in executives %}
                     <div class="item">
                         <div class="testimony-wrap py-4">
                             <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-quote-left"></span></div>
                           <div class="text">
-                            <p class="mb-4">{{f['moto']}}</p>
+                            <p class="mb-4">{{e['status']}}</p>
                             <div class="d-flex align-items-center">
-                                <div class="user-img" style="background-image: url(static/fancier/{{f['pic']}})"></div>
+                                <div class="user-img" style="background-image: url(static/members/{{e['pic']}})"></div>
                                 <div class="pl-3">
-                                    <p class="name">{{f['name']}}</p>
-                                    <span class="position">{{f['sub']}}</span>
+                                    <p class="name">{{e['name']}}</p>
+                                    <!--<span class="position">{{e['status']}}</span>-->
                                   </div>
                               </div>
                           </div>
@@ -106,25 +106,18 @@
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
           <div class="col-md-7 heading-section text-center ftco-animate">
-            <h2>Council of Pigeon Infinity</h2>
+            <h2>Our Patrons & Advisors</h2>
           </div>
         </div>
         <div class="row d-flex">
-          {% for c in council %}
-          <div class="col-md-4 ftco-animate">
+          {% for p in partons %}
+          <div class="col-md-3 ftco-animate">
             <div class="blog-entry align-self-stretch">
-              <a href="Pigeon/{{p['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+p['MainPic'])}});">
+              <a href="#" class="block-20 rounded" style="background-image: url({{url_for('static', filename='members/'+p['pic'])}});">
               </a>
               <div class="text p-4">
                 <div class="meta mb-2">
-                    <h3 class="heading"><a href="Pigeon/{{p['PigeonID']}}">{{p['PigeonRing']}}</a></h3>
-
-                    <div><a href="Pigeon/{{p['PigeonID']}}">{{c['PigeonName']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}">Breed by: {{c['BreedBy']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}">Offer by: {{c['OfferBy']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}" class="meta-chat"><span class="fa fa-gavel"></span> {{p['Price']}} {{auc['Currency']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}">Last bid by: {{c['LastBidderName']}}</a></div><br>
-                    <div><p id="ends{{p['PigeonID']}}" style="color:crimson"></p></div>
+                    <h3 class="heading"><a href="#">{{p['name']}}</a></h3>
                 </div>
               </div>
             </div>
@@ -138,25 +131,18 @@
       <div class="container">
         <div class="row justify-content-center pb-5 mb-3">
           <div class="col-md-7 heading-section text-center ftco-animate">
-            <h2>Our Patrons & Advisors</h2>
+            <h2>Advisors of Pigeon Infinity</h2>
           </div>
         </div>
         <div class="row d-flex">
-          {% for c in council %}
-          <div class="col-md-4 ftco-animate">
+          {% for a in advisors %}
+          <div class="col-md-3 ftco-animate">
             <div class="blog-entry align-self-stretch">
-              <a href="Pigeon/{{p['PigeonID']}}" class="block-20 rounded" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+p['MainPic'])}});">
+              <a href="#" class="block-20 rounded" style="background-image: url({{url_for('static', filename='members/'+a['pic'])}});">
               </a>
               <div class="text p-4">
                 <div class="meta mb-2">
-                    <h3 class="heading"><a href="Pigeon/{{p['PigeonID']}}">{{p['PigeonRing']}}</a></h3>
-
-                    <div><a href="Pigeon/{{p['PigeonID']}}">{{c['PigeonName']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}">Breed by: {{c['BreedBy']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}">Offer by: {{c['OfferBy']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}" class="meta-chat"><span class="fa fa-gavel"></span> {{p['Price']}} {{auc['Currency']}}</a></div><br>
-                    <div><a href="Pigeon/{{p['PigeonID']}}">Last bid by: {{c['LastBidderName']}}</a></div><br>
-
+                    <h3 class="heading"><a href="#">{{a['name']}}</a></h3>
                 </div>
               </div>
             </div>
@@ -165,6 +151,33 @@
         </div>
       </div>
     </section>
+
+	<section class="ftco-section bg-light">
+      <div class="container">
+        <div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>Council of Pigeon Infinity</h2>
+          </div>
+        </div>
+        <div class="row d-flex">
+          {% for c in councils %}
+          <div class="col-md-3 ftco-animate">
+            <div class="blog-entry align-self-stretch">
+              <a href="#" class="block-20 rounded" style="background-image: url({{url_for('static', filename='members/'+c['pic'])}});">
+              </a>
+              <div class="text p-4">
+                <div class="meta mb-2">
+                    <h3 class="heading"><a href="#">{{c['name']}}</a></h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+
 
     <section class="ftco-section bg-light">
 			<div class="container">

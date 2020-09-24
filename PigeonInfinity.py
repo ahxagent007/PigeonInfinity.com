@@ -515,6 +515,16 @@ class DatabaseByPyMySQL:
             print('Error = ', str(sys.exc_info()[0]), flush=True)
             return False
 
+    def getMembers(self, type):
+        sql_qry = 'SELECT * FROM members WHERE type = "{0}";'.format(type)
+        self.cursor.execute(sql_qry)
+        data = self.cursor.fetchall()
+
+        if len(data) > 0:
+            return data, True
+        else:
+            return data, False
+
 ###############################################################
 
 @app.route('/')
@@ -906,7 +916,13 @@ def rules():
 
 @app.route('/Contact')
 def contact():
-    return render_template('contact.html')
+    db = DatabaseByPyMySQL()
+    partons, stsp = db.getMembers('patrons')
+    advisors, stsa = db.getMembers('advisors')
+    councils, stsc = db.getMembers('council')
+    executives, stse = db.getMembers('executives')
+
+    return render_template('contact.html', partons=partons, advisors=advisors, councils=councils, executives=executives)
 
 @app.route('/Clubs')
 def club():
