@@ -124,9 +124,9 @@
 
             console.log(nowMilis);
             
-            let formattedTime = Date.parse(endingTime);
-            let auctionEndDateTime = new Date(formattedTime);
-            let aucEndsMilis = auctionEndDateTime.getTime();
+            //let formattedTime = Date.parse(endingTime);
+            //let auctionEndDateTime = new Date(formattedTime);
+            //let aucEndsMilis = auctionEndDateTime.getTime();
 
             let auctionEndDateTime = DateTime.fromFormat(endingTime, 'y-MM-dd HH:mm:ss',{zone: 'Asia/Dhaka'});
             let aucEndsMilis = auctionEndDateTime.toMillis();
