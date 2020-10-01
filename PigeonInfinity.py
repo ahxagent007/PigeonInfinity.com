@@ -109,7 +109,7 @@ class DatabaseByPyMySQL:
         else:
             return 'NULL', False
 
-    def Register(self, Name, Address, DOB, NID, Email, Phone, Pass, ref):
+    def Register(self, Name, Address, DOB, NID, Email, Phone, Pass, ref, ip):
 
         print(Name, Address, DOB, NID, Email, Phone, Pass, ref)
 
@@ -120,9 +120,9 @@ class DatabaseByPyMySQL:
             nowDate = str(now.strftime("%Y-%m-%d %H:%M:%S"))
 
             # Adding
-            sql = 'INSERT INTO user (name, phone, email, password, address, register_date, dob, nid, reference)' \
-                   ' VALUES("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}", "{8}");'\
-                    .format(Name, Phone, Email, Pass, Address, nowDate, DOB, NID, ref)
+            sql = 'INSERT INTO user (name, phone, email, password, address, register_date, dob, nid, reference, ip_address)' \
+                   ' VALUES("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}", "{8}", "{9}");'\
+                    .format(Name, Phone, Email, Pass, Address, nowDate, DOB, NID, ref, ip)
             print(sql)
             self.cursor.execute(sql)
             self.conection.commit()
@@ -546,6 +546,8 @@ def login():
     if request.method == 'POST':
         email = request.form['user_email']
         pw = request.form['user_pass']
+        ip = request.remote_addr
+        print(ip)
 
         DB = DatabaseByPyMySQL()
         user, sts = DB.getUserByEmail(email)
@@ -608,9 +610,12 @@ def registration():
 
             reference = request.form['reference']
 
+            ip_add = request.remote_addr
+            print(ip_add)
+
             if user_pass1 == user_pass2:
                 DB = DatabaseByPyMySQL()
-                msg = DB.Register(user_name, user_address, user_dob, user_nid, user_email, user_phone, computeMD5hash(user_pass1), reference)
+                msg = DB.Register(user_name, user_address, user_dob, user_nid, user_email, user_phone, computeMD5hash(user_pass1), reference, ip_add)
 
                 return render_template('register.html', error=msg, userData={})
             else:
