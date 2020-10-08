@@ -233,7 +233,7 @@
             <div class="row">
                 <div class="col-md-4 ftco-animate">
                     <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+pigeon['MainPic'])}});">
-                        <a href="{{url_for('static', filename='UPLOADS/'+pigeon['MainPic'])}}" class="icon image-popup d-flex justify-content-center align-items-center">
+                        <a href="{{url_for('static', filename='UPLOADS/AUCTION/'+pigeon['MainPic'])}}" class="icon image-popup d-flex justify-content-center align-items-center">
                             <span class="fa fa-expand"></span>
                         </a>
                     </div>
@@ -241,7 +241,7 @@
                 {% for pics in pigeon['AllPic'] %}
                   <div class="col-md-4 ftco-animate">
                     <div class="work mb-4 img d-flex align-items-end" style="background-image: url({{url_for('static', filename='UPLOADS/AUCTION/'+pics)}});">
-                        <a href="{{url_for('static', filename='UPLOADS/'+pics)}}" class="icon image-popup d-flex justify-content-center align-items-center">
+                        <a href="{{url_for('static', filename='UPLOADS/AUCTION/'+pics)}}" class="icon image-popup d-flex justify-content-center align-items-center">
                             <span class="fa fa-expand"></span>
                         </a>
                     </div>

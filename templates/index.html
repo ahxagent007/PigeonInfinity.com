@@ -20,7 +20,7 @@
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
           <div class="col-md-11 ftco-animate text-center">
           	<h1 class="mb-4">{{setting['heading']}}</h1>
-            <p><a href="{{setting['headinglink']}}" class="btn btn-primary mr-md-4 py-3 px-4">See Auctions<span class="ion-ios-arrow-forward"></span></a></p>
+            <p><a href="{{url_for('registration')}}" class="btn btn-primary mr-md-4 py-3 px-4">Create Account<span class="ion-ios-arrow-forward"></span></a></p>
           </div>
         </div>
       </div>
@@ -59,9 +59,9 @@
             		<span><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
               </div>
               <div class="media-body">
-                <h3 class="heading">Latest Auction</h3>
-                <p>See our latest auction in detail. With best quality birds we will not let you be disappointed at any cost.</p>
-                <a href="Auction/{{auc['AuctionID']}}" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
+                <h3 class="heading">Create Account</h3>
+                <p>Create account by your self and bid on amazing pigeons on our website</p>
+                <a href="{{url_for('registration')}}" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Visit</i></a>
               </div>
             </div>
           </div>
